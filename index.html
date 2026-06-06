@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============ SEO ============ -->
+<title>DesignJarvis｜智慧化場域與智慧化硬體設計整合</title>
+<meta name="description" content="DesignJarvis 專注於智慧家庭、智慧工廠、AIoT 硬體開發、能源碳排監測與智慧場域整合，協助住宅、商業空間與工廠打造可感測、可控制、可分析的智慧系統。">
+<meta name="keywords" content="DesignJarvis, 智慧化場域, 智慧化硬體, 智慧家庭, 智慧工廠, AIoT, 物聯網, 硬體開發, 能源監測, 碳排管理, FlexPro, Swirl Lamp, Factory Jarvis, Smart Home">
+<meta name="author" content="DesignJarvis">
+<meta name="theme-color" content="#050505">
+<link rel="canonical" href="https://designjarvis.com/">
+<link rel="icon" type="image/png" href="assets/images/logo-mark.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DesignJarvis">
+<meta property="og:title" content="DesignJarvis｜智慧化場域與智慧化硬體設計整合">
+<meta property="og:description" content="將設計美學、感測控制、物聯網與 AI 系統整合，讓空間與硬體具備理解、回應與優化的能力。">
+<meta property="og:image" content="assets/images/logo-mark.png">
+<meta property="og:url" content="https://designjarvis.com/">
+<meta property="og:locale" content="zh_TW">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DesignJarvis｜智慧化場域與智慧化硬體設計整合">
+<meta name="twitter:description" content="將場域、硬體、資料與設計整合成可落地的智慧系統。">
+<meta name="twitter:image" content="assets/images/logo-mark.png">
+
+<!-- 結構化資料 -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"DesignJarvis",
+"description":"智慧化場域與智慧化硬體設計整合品牌","email":"service@designjarvis.com",
+"url":"https://designjarvis.com/","logo":"assets/images/logo-mark.png",
+"address":{"@type":"PostalAddress","addressLocality":"Kaohsiung","addressCountry":"TW"},"areaServed":"Southern Taiwan"}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- 全站互動式星座背景 -->
+<canvas id="starfield" aria-hidden="true"></canvas>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav" aria-label="主導覽">
+  <a class="brand" href="#top" aria-label="DesignJarvis 首頁">
+    <img src="assets/images/logo-mark.png" alt="DesignJarvis 標誌">
+    <span class="name">Design<span>Jarvis</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#capabilities" data-en="Capabilities">核心能力</a>
+    <a href="#products" data-en="Products">產品矩陣</a>
+    <a href="#cases" data-en="Case Studies">實際案例</a>
+    <a href="#flow" data-en="Process">整合流程</a>
+    <a href="#contact" data-en="Contact">聯絡</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle" role="group" aria-label="語言切換">
+      <button data-lang="zh" class="active" aria-label="切換為中文">中</button>
+      <button data-lang="en" aria-label="Switch to English">EN</button>
+    </div>
+    <a class="nav-cta" href="#contact" data-en="Book a project">預約專案討論</a>
+    <button class="hamburger" id="hamburger" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<span id="top"></span>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="hero">
+  <canvas id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="hero-veil"></div>
+  <div class="hero-grain"></div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow" data-en="Smart Space × Smart Hardware">智慧場域 × 智慧硬體</span>
+      <h1 data-en="Integrating Smart Spaces<br>&amp; Hardware Design">智慧化場域<br>與硬體設計整合</h1>
+      <p class="hero-sub" data-en="DesignJarvis unites design aesthetics, sensing &amp; control, IoT and AI systems — giving spaces and hardware the ability to understand, respond and optimise.">DesignJarvis 將設計美學、感測控制、物聯網與 AI 系統整合，讓空間與硬體具備理解、回應與優化的能力。</p>
+      <div class="hero-btns">
+        <a class="btn btn-primary" href="#products" data-en="Explore the matrix <span class=&quot;arr&quot;>→</span>">探索產品矩陣 <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="#contact" data-en="Book a project">預約專案討論</a>
+      </div>
+      <div class="hero-meta">
+        <div class="item"><div class="k">6</div><div class="v" data-en="Product platforms">產品與專案平台</div></div>
+        <div class="item"><div class="k">2</div><div class="v" data-en="Integration tracks">場域 + 硬體主軸</div></div>
+        <div class="item"><div class="k">100%</div><div class="v" data-en="Data-visualised">資料可視化整合</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint" aria-hidden="true"><span class="mouse"></span><span data-en="SCROLL">向下探索</span></div>
+</header>
+
+<!-- ============ STATEMENT 品牌一句話 ============ -->
+<section class="band band-deep">
+  <div class="wrap statement">
+    <h2 class="reveal" data-en="Let spaces begin to understand you,<br>and hardware begin to <span class=&quot;hl&quot;>respond to the world.</span>">讓空間開始理解你，<br>讓硬體開始<span class="hl">回應世界。</span></h2>
+    <p class="reveal" data-d="1" data-en="DesignJarvis is not a single-product company — it is a technology &amp; design brand that integrates spaces, hardware, data and design into deployable intelligent systems.">DesignJarvis 不是單一產品公司，而是將場域、硬體、資料與設計整合成可落地智慧系統的技術設計品牌。</p>
+  </div>
+</section>
+
+<!-- ============ CAPABILITIES 兩大核心能力 ============ -->
+<section class="band" id="capabilities">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-en="Two Core Capabilities">兩大核心能力</span>
+      <h2 data-en="From spaces to hardware — built to be intelligent">從場域到硬體，皆可被打造成智慧系統</h2>
+    </div>
+    <div class="cap-grid">
+
+      <article class="cap-card glass reveal">
+        <div class="cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V6l8-3 8 3v15" fill="none"/><path d="M4 21h16"/><path d="M9 9h0M13 9h0M9 13h0M13 13h0M9 17h0M13 17h0" stroke-linecap="round"/></svg></div>
+        <h3 data-en="Smart Spaces">智慧化場域</h3>
+        <p data-en="Upgrade homes, commercial spaces, showcases and factory environments into intelligent systems that can sense, control, record and analyse.">將住宅、商業空間、展示場域與工廠環境，升級為可感測、可控制、可紀錄、可分析的智慧系統。</p>
+        <ul class="cap-list">
+          <li data-en="Smart-home integration">智慧家庭整合</li>
+          <li data-en="Commercial space automation">商業空間自動化</li>
+          <li data-en="Smart factory monitoring">智慧工廠監測</li>
+          <li data-en="Energy &amp; carbon data">能源與碳排資料化</li>
+          <li data-en="Interactive showcase systems">展示場域互動系統</li>
+        </ul>
+      </article>
+
+      <article class="cap-card glass reveal" data-d="1">
+        <div class="cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1.5" fill="none"/><rect x="10" y="10" width="4" height="4" fill="none"/><path d="M10 7V4.5M14 7V4.5M10 17v2.5M14 17v2.5M7 10H4.5M7 14H4.5M17 10h2.5M17 14h2.5"/></svg></div>
+        <h3 data-en="Smart Hardware">智慧化硬體</h3>
+        <p data-en="Add sensing, control, connectivity and data to products, equipment and modules — building smart hardware that can be shown, tested and commercialised.">將產品、設備與模組加入感測、控制、連網與資料能力，打造可展示、可測試、可商業化的智慧硬體。</p>
+        <ul class="cap-list">
+          <li data-en="Smart product development">智慧產品開發</li>
+          <li data-en="AIoT control modules">AIoT 控制模組</li>
+          <li data-en="Plug-in monitoring hardware">外掛式監測硬體</li>
+          <li data-en="3D printing &amp; mechanism prototyping">3D 列印與機構原型</li>
+          <li data-en="Custom smart devices">客製化智慧裝置</li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTS 產品矩陣 ============ -->
+<section class="band band-1" id="products">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-en="Product & Project Matrix">產品與專案矩陣</span>
+      <h2 data-en="One brand matrix, not a single product">一個品牌矩陣，而非單一產品</h2>
+      <p data-en="Six platforms across smart spaces and smart hardware — each a doorway you can step into.">六個橫跨智慧場域與智慧硬體的平台，每一個都是可以直接進入的入口。</p>
+    </div>
+    <!-- 由 main.js 依 PRODUCTS 陣列渲染 -->
+    <div class="prod-grid" id="prodGrid"></div>
+
+    <!-- 區塊內 CTA -->
+    <div class="cta-strip glass reveal" style="margin-top:36px">
+      <div>
+        <h3 data-en="Have a space or product in mind?">已經有想整合的場域或產品了嗎？</h3>
+        <p class="muted" data-en="Tell us the goal — we\u2019ll map it to the right platform and a deployable plan.">告訴我們目標，我們協助你對應到合適的平台與可落地的規劃。</p>
+      </div>
+      <div class="hero-btns">
+        <a class="btn btn-primary" href="#contact" data-en="Get a project quote <span class=&quot;arr&quot;>→</span>">取得專案報價 <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="#contact" data-en="Submit hardware needs">提出硬體開發需求</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE STUDIES 實際案例 ============ -->
+<section class="band" id="cases">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-en="Case Studies">實際案例</span>
+      <h2 data-en="From concept to deployed system">從概念到可落地的系統</h2>
+      <p data-en="Real projects across smart living, art lighting, factory data and AIoT prototypes. Images are placeholders — replace them in assets/images/.">橫跨智慧生活、藝術照明、工廠資料與 AIoT 原型的實際專案。圖片為示意佔位，可於 assets/images/ 替換。</p>
+    </div>
+    <!-- 由 main.js 依 CASES 陣列渲染 -->
+    <div class="case-grid" id="caseGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FLOW 系統整合流程 ============ -->
+<section class="band band-1" id="flow">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-en="Integration Process">系統整合流程</span>
+      <h2 data-en="A clear path from need to continuous optimisation">從需求到持續優化的清晰路徑</h2>
+    </div>
+    <!-- 由 main.js 依 FLOW 陣列渲染；滾動時依序亮起 -->
+    <div class="flow"><div class="flow-track" id="flowTrack"></div></div>
+
+    <div class="cta-strip glass reveal" style="margin-top:54px">
+      <div>
+        <h3 data-en="Ready to start the discovery phase?">準備好進入需求討論了嗎？</h3>
+        <p class="muted" data-en="A short conversation is enough to scope your space or hardware project.">一次簡短的討論，就能為你的場域或硬體專案定義範圍。</p>
+      </div>
+      <a class="btn btn-primary" href="#contact" data-en="Book a project <span class=&quot;arr&quot;>→</span>">預約專案討論 <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VALUES 品牌價值 ============ -->
+<section class="band">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-en="What We Believe">品牌價值主張</span>
+      <h2 data-en="Not just devices — systems that grow">不只是設備，而是會成長的系統</h2>
+    </div>
+    <div class="val-grid">
+      <article class="val-card glass reveal">
+        <div class="val-num">01</div><div class="val-bar"></div>
+        <h3 data-en="Not just devices — building intelligent systems that can grow.">不只做設備，而是打造可成長的智慧系統。</h3>
+        <p data-en="Every hardware and space integration should accumulate data and keep improving — becoming the foundation for future services and business models.">每一個硬體與場域整合，都應該能累積資料、持續優化，成為未來服務與商業模式的基礎。</p>
+      </article>
+      <article class="val-card glass reveal" data-d="1">
+        <div class="val-num">02</div><div class="val-bar"></div>
+        <h3 data-en="Not just control — making spaces produce analysable data.">不只做控制，而是讓場域產生可被分析的資料。</h3>
+        <p data-en="From sensing and control to visualisation, DesignJarvis turns on-site conditions into information you can manage and decide on.">從感測、控制到資料可視化，DesignJarvis 將現場狀態轉換成可管理、可決策的資訊。</p>
+      </article>
+      <article class="val-card glass reveal" data-d="2">
+        <div class="val-num">03</div><div class="val-bar"></div>
+        <h3 data-en="Not just products — hardware designed as commercial solutions.">不只做產品，而是把硬體設計成可商業化的解決方案。</h3>
+        <p data-en="From form, mechanism and electronics to software and showcase pages — smart hardware that moves beyond prototypes toward productisation and market.">從外型、機構、電控、軟體到展示頁，讓智慧硬體不只停留在原型，而能走向產品化與市場化。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUDIENCE 適合對象 ============ -->
+<section class="band band-1">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-en="Who It\u2019s For">適合對象</span>
+      <h2 data-en="Built for people upgrading spaces and products">為正在升級空間與產品的人而設計</h2>
+    </div>
+    <div class="aud-grid">
+      <article class="aud-card glass reveal"><span class="aud-no">01</span>
+        <p data-en="Homeowners of residences and suites who want to <b>upgrade to a smart home</b>.">想升級<b>智慧家庭</b>的住宅與套房業主</p></article>
+      <article class="aud-card glass reveal" data-d="1"><span class="aud-no">02</span>
+        <p data-en="Brands and commercial venues building <b>smart showcase spaces</b>.">想打造<b>智慧展示空間</b>的品牌與商業場域</p></article>
+      <article class="aud-card glass reveal" data-d="2"><span class="aud-no">03</span>
+        <p data-en="SMEs introducing <b>energy monitoring and process data</b>.">想導入<b>能源監測與製程資料化</b>的中小工廠</p></article>
+      <article class="aud-card glass reveal" data-d="3"><span class="aud-no">04</span>
+        <p data-en="Startups, brands and research teams developing <b>smart hardware products</b>.">想開發<b>智慧硬體產品</b>的新創、品牌與研究團隊</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT / CTA ============ -->
+<section class="band cta-final" id="contact">
+  <div class="wrap">
+    <div class="cta-box glass reveal">
+      <span class="eyebrow" style="justify-content:center" data-en="Let\u2019s Build">下一步</span>
+      <h2 data-en="Take your space and products into the next intelligent stage.">讓你的空間與產品，進入下一個智慧化階段。</h2>
+      <p data-en="Whether it\u2019s a smart home, commercial space, smart factory, energy &amp; carbon management or custom smart hardware — DesignJarvis helps you go from idea to a deployable system.">無論是智慧家庭、商業空間、智慧工廠、能源碳排管理，或是客製化智慧硬體，DesignJarvis 都能協助你從想法走向可落地的系統。</p>
+      <div class="cta-btns">
+        <a class="btn btn-primary" href="mailto:service@designjarvis.com" data-en="Contact DesignJarvis <span class=&quot;arr&quot;>→</span>">聯絡 DesignJarvis <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="mailto:service@designjarvis.com?subject=智慧化規劃預約" data-en="Book a planning session">預約智慧化規劃</a>
+        <a class="btn btn-ghost" href="#products" data-en="View product matrix">查看產品矩陣</a>
+      </div>
+      <p class="cta-mail" data-en="Email · <a href=&quot;mailto:service@designjarvis.com&quot;>service@designjarvis.com</a>">聯絡信箱 · <a href="mailto:service@designjarvis.com">service@designjarvis.com</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top" aria-label="DesignJarvis 首頁">
+          <img src="assets/images/logo-mark.png" alt="DesignJarvis 標誌">
+          <span class="name">Design<span>Jarvis</span></span>
+        </a>
+        <p data-en="A technology &amp; design brand integrating smart spaces, smart hardware, data and design into deployable intelligent systems.">將智慧場域、智慧硬體、資料與設計整合成可落地智慧系統的技術設計品牌。</p>
+      </div>
+      <div class="foot-col">
+        <h5 data-en="Products">產品</h5>
+        <a href="https://swirl-lamp.designjarvis.com/" target="_blank" rel="noopener">Swirl Lamp</a>
+        <a href="https://smarthome.designjarvis.com/" target="_blank" rel="noopener">Smart Home</a>
+        <a href="https://factoryjarvis.designjarvis.com/" target="_blank" rel="noopener">Factory Jarvis</a>
+      </div>
+      <div class="foot-col">
+        <h5 data-en="Platforms">平台</h5>
+        <a href="https://ecotraker.designjarvis.com/" target="_blank" rel="noopener">EcoTraker</a>
+        <a href="https://406lab.designjarvis.com/" target="_blank" rel="noopener">406LAB</a>
+        <a href="https://flexpro.designjarvis.com/" target="_blank" rel="noopener">FlexPro</a>
+      </div>
+      <div class="foot-col foot-contact">
+        <h5 data-en="Contact">聯絡資訊</h5>
+        <div class="fc-item">
+          <span class="fc-l" data-en="Email">聯絡信箱</span>
+          <a href="mailto:service@designjarvis.com">service@designjarvis.com</a>
+        </div>
+        <div class="fc-item">
+          <span class="fc-l" data-en="Location">所在地</span>
+          <span class="fc-v">Kaohsiung, Taiwan</span>
+        </div>
+        <div class="fc-item">
+          <span class="fc-l" data-en="Service Area">服務範圍</span>
+          <span class="fc-v">Southern Taiwan / Remote Consultation Available</span>
+          <span class="fc-note" data-en="Primarily southern Taiwan; remote initial consultation and project assessment available elsewhere.">南部地區為主，其他地區可遠端初步討論與專案評估。</span>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 DesignJarvis. All rights reserved.</span>
+      <span data-en="Smart Space · Smart Hardware · Data · Design">智慧場域 · 智慧硬體 · 資料 · 設計</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
