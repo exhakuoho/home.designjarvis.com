@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CourseOps｜課程營運管理系統</title>
+<style>
+  :root{
+    --primary:#1B3A6B;
+    --primary-light:#2D5495;
+    --primary-soft:#E8EEF7;
+    --bg:#FFFFFF;
+    --card:#F4F6FA;
+    --border:#E3E7EE;
+    --text:#1F2937;
+    --text-light:#6B7280;
+    --radius-lg:16px;
+    --radius-md:12px;
+    --radius-sm:8px;
+    --green:#16A34A;
+    --green-bg:#E7F6EC;
+    --amber:#D97706;
+    --amber-bg:#FCF1DF;
+    --gray:#6B7280;
+    --gray-bg:#EEF1F5;
+    --blue:#2563EB;
+    --blue-bg:#E7EFFD;
+    --shadow:0 2px 10px rgba(27,58,107,0.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang TC','Microsoft JhengHei','Noto Sans TC',Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input{font-family:inherit;}
+  ::placeholder{color:#9CA3AF;}
+
+  /* ---------- Login ---------- */
+  .login-wrap{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(160deg,#F5F8FC 0%,#EDF1F8 60%,#E6ECF6 100%);
+    padding:20px;
+  }
+  .login-card{
+    width:100%;max-width:400px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:0 12px 40px rgba(27,58,107,0.10);
+    padding:40px 36px;
+  }
+  .login-logo{
+    width:52px;height:52px;border-radius:14px;
+    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:20px;margin:0 auto 18px;
+  }
+  .login-title{text-align:center;font-size:21px;font-weight:800;color:var(--primary);}
+  .login-sub{text-align:center;font-size:13px;color:var(--text-light);margin-top:6px;margin-bottom:28px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text);}
+  .field input{
+    width:100%;padding:11px 14px;border:1px solid var(--border);
+    border-radius:var(--radius-sm);font-size:14px;background:#FBFCFE;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .field input:focus{outline:none;border-color:var(--primary-light);box-shadow:0 0 0 3px var(--primary-soft);background:#fff;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    border:none;border-radius:var(--radius-sm);font-weight:600;font-size:14px;
+    cursor:pointer;transition:all .15s;padding:11px 18px;
+  }
+  .btn-primary{background:var(--primary);color:#fff;width:100%;}
+  .btn-primary:hover{background:var(--primary-light);}
+  .btn-outline{background:#fff;color:var(--primary);border:1px solid var(--border);}
+  .btn-outline:hover{border-color:var(--primary-light);background:var(--primary-soft);}
+  .btn-ghost{background:transparent;color:var(--text-light);}
+  .btn-ghost:hover{background:var(--card);}
+  .btn-sm{padding:7px 14px;font-size:13px;}
+  .login-hint{margin-top:18px;text-align:center;font-size:12px;color:var(--text-light);}
+
+  /* ---------- Shell ---------- */
+  .shell{display:flex;min-height:100vh;background:var(--bg);}
+  .sidebar{
+    width:240px;flex-shrink:0;background:var(--primary);
+    color:#fff;display:flex;flex-direction:column;
+    position:fixed;top:0;bottom:0;left:0;z-index:40;
+    transition:transform .25s ease;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:10px;padding:22px 22px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+  }
+  .sidebar-brand .mark{
+    width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.14);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;
+  }
+  .sidebar-brand .name{font-weight:800;font-size:16px;line-height:1.2;}
+  .sidebar-brand .name span{display:block;font-weight:400;font-size:11px;opacity:.65;}
+  .sidebar-nav{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:4px;}
+  .nav-item{
+    display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;
+    color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;cursor:pointer;
+    border:none;background:transparent;text-align:left;width:100%;transition:all .15s;
+  }
+  .nav-item .ic{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .nav-item:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .nav-item.active{background:rgba(255,255,255,0.16);color:#fff;font-weight:700;}
+  .sidebar-footer{padding:16px 22px;border-top:1px solid rgba(255,255,255,0.12);font-size:12px;color:rgba(255,255,255,0.55);}
+
+  .main{flex:1;margin-left:240px;display:flex;flex-direction:column;min-width:0;}
+  .topbar{
+    height:64px;flex-shrink:0;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 28px;background:#fff;position:sticky;top:0;z-index:30;
+  }
+  .topbar .title{font-size:18px;font-weight:800;color:var(--primary);}
+  .topbar .right{display:flex;align-items:center;gap:14px;}
+  .avatar{
+    width:36px;height:36px;border-radius:50%;background:var(--primary-soft);
+    color:var(--primary);display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;
+  }
+  .menu-toggle{
+    display:none;border:none;background:var(--card);border-radius:8px;
+    width:36px;height:36px;align-items:center;justify-content:center;cursor:pointer;color:var(--primary);
+  }
+  .page{padding:26px 28px 60px;flex:1;}
+  .page-header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
+  .page-header h1{font-size:22px;font-weight:800;color:var(--text);}
+  .page-header p{font-size:13px;color:var(--text-light);margin-top:4px;}
+
+  .overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.4);z-index:35;}
+  .overlay.show{display:block;}
+
+  /* ---------- Cards / Stats ---------- */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px;}
+  .stat-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:20px;display:flex;flex-direction:column;gap:10px;
+  }
+  .stat-card .top{display:flex;align-items:center;justify-content:space-between;}
+  .stat-card .icon{
+    width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    background:var(--primary-soft);color:var(--primary);
+  }
+  .stat-card .label{font-size:13px;color:var(--text-light);font-weight:500;}
+  .stat-card .value{font-size:28px;font-weight:800;color:var(--text);}
+
+  .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;}
+  .panel h2{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--text);}
+  .panel-stack{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+  .list-row{
+    background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);
+    padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .list-row .meta{font-size:12px;color:var(--text-light);margin-top:3px;}
+  .list-row .name{font-size:14px;font-weight:600;}
+  .budget-row{margin-bottom:16px;}
+  .budget-row:last-child{margin-bottom:0;}
+  .budget-row .head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px;}
+  .budget-row .head .name{font-weight:600;}
+  .budget-row .head .nums{color:var(--text-light);font-size:12px;}
+  .bar-bg{height:8px;border-radius:6px;background:var(--gray-bg);overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--primary),var(--primary-light));}
+
+  /* ---------- Badges ---------- */
+  .badge{display:inline-flex;align-items:center;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;}
+  .badge-green{background:var(--green-bg);color:var(--green);}
+  .badge-amber{background:var(--amber-bg);color:var(--amber);}
+  .badge-gray{background:var(--gray-bg);color:var(--gray);}
+  .badge-blue{background:var(--blue-bg);color:var(--blue);}
+
+  .tag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:500;background:var(--primary-soft);color:var(--primary);}
+  .tag.outline{background:#fff;border:1px solid var(--border);color:var(--text-light);}
+  .tag.selectable{cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-light);transition:all .15s;}
+  .tag.selectable.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+  .tag.selectable:hover{border-color:var(--primary-light);}
+
+  /* ---------- Toolbar / Search ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .search-box{position:relative;flex:1;min-width:220px;max-width:360px;}
+  .search-box input{
+    width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border);
+    border-radius:var(--radius-sm);font-size:14px;background:var(--card);
+  }
+  .search-box input:focus{outline:none;border-color:var(--primary-light);background:#fff;box-shadow:0 0 0 3px var(--primary-soft);}
+  .search-box .ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-light);}
+  .toolbar-actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+  .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+
+  /* ---------- Table ---------- */
+  .table-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{
+    text-align:left;padding:13px 16px;background:var(--card);color:var(--text-light);
+    font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;
+    border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  tbody td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#FAFBFD;}
+  .cell-strong{font-weight:700;color:var(--text);}
+  .cell-sub{font-size:12px;color:var(--text-light);margin-top:2px;}
+  .table-scroll{overflow-x:auto;}
+  .empty-state{padding:50px 20px;text-align:center;color:var(--text-light);font-size:14px;}
+
+  /* ---------- Teacher Cards ---------- */
+  .teacher-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
+  .teacher-card{
+    background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:18px;display:flex;flex-direction:column;gap:12px;transition:all .15s;
+  }
+  .teacher-card.selectable{cursor:pointer;}
+  .teacher-card.selectable:hover{border-color:var(--primary-light);box-shadow:var(--shadow);}
+  .teacher-card.selected{border-color:var(--primary);background:var(--primary-soft);box-shadow:0 0 0 1px var(--primary);}
+  .t-head{display:flex;align-items:center;gap:12px;}
+  .t-avatar{
+    width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;
+  }
+  .t-name{font-weight:700;font-size:15px;}
+  .t-region{font-size:12px;color:var(--text-light);}
+  .t-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .t-stats{display:flex;gap:18px;font-size:12px;color:var(--text-light);border-top:1px solid var(--border);padding-top:12px;}
+  .t-stats b{color:var(--text);font-size:14px;display:block;}
+  .check-dot{
+    margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:12px;
+  }
+  .teacher-card.selected .check-dot{background:var(--primary);border-color:var(--primary);}
+
+  /* ---------- Wizard ---------- */
+  .stepper{display:flex;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:6px;}
+  .step{display:flex;align-items:center;gap:10px;}
+  .step-circle{
+    width:32px;height:32px;border-radius:50%;background:var(--gray-bg);color:var(--text-light);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;
+    border:2px solid transparent;transition:all .2s;
+  }
+  .step.active .step-circle{background:var(--primary);color:#fff;}
+  .step.done .step-circle{background:var(--green);color:#fff;}
+  .step-label{font-size:13px;font-weight:600;color:var(--text-light);white-space:nowrap;}
+  .step.active .step-label, .step.done .step-label{color:var(--text);}
+  .step-line{width:40px;height:2px;background:var(--border);margin:0 6px;}
+
+  .wizard-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;}
+  .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  .form-grid .full{grid-column:1 / -1;}
+  .form-field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;}
+  .form-field input,.form-field select{
+    width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:var(--radius-sm);
+    font-size:14px;background:#fff;
+  }
+  .form-field input:focus,.form-field select:focus{outline:none;border-color:var(--primary-light);box-shadow:0 0 0 3px var(--primary-soft);}
+
+  .plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+  .plan-card{
+    background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:18px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:12px;
+  }
+  .plan-card:hover{border-color:var(--primary-light);box-shadow:var(--shadow);}
+  .plan-card.selected{border-color:var(--primary);background:var(--primary-soft);box-shadow:0 0 0 1px var(--primary);}
+  .plan-card .pc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .plan-card .pc-name{font-weight:700;font-size:15px;}
+  .plan-card .pc-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-light);}
+  .plan-card .pc-row b{color:var(--text);font-size:13px;}
+
+  .wizard-actions{display:flex;justify-content:space-between;margin-top:24px;}
+  .summary-block{background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:14px;}
+  .summary-block h3{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px;text-transform:uppercase;letter-spacing:.03em;}
+  .summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 20px;font-size:13px;}
+  .summary-grid .k{color:var(--text-light);}
+  .summary-grid .v{font-weight:600;margin-top:2px;}
+  .success-box{
+    text-align:center;padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;
+  }
+  .success-box .check{
+    width:64px;height:64px;border-radius:50%;background:var(--green-bg);color:var(--green);
+    display:flex;align-items:center;justify-content:center;font-size:30px;
+  }
+
+  /* ---------- Settings ---------- */
+  .settings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:760px;}
+  .settings-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;}
+  .settings-item h3{font-size:14px;font-weight:700;margin-bottom:6px;}
+  .settings-item p{font-size:12px;color:var(--text-light);line-height:1.6;}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1080px){
+    .stat-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-2{grid-template-columns:1fr;}
+    .form-grid{grid-template-columns:1fr;}
+    .summary-grid{grid-template-columns:1fr;}
+    .settings-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width: 880px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0);box-shadow:8px 0 30px rgba(0,0,0,0.18);}
+    .main{margin-left:0;}
+    .menu-toggle{display:flex;}
+    .stat-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width: 560px){
+    .stat-grid{grid-template-columns:1fr;}
+    .page{padding:18px 16px 50px;}
+    .topbar{padding:0 16px;}
+    .toolbar{align-items:stretch;}
+    .search-box{max-width:none;}
+    .stepper{gap:0;}
+    .step-label{display:none;}
+    .step.active .step-label{display:inline;}
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="vendor/react.production.min.js"></script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script src="vendor/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useMemo } = React;
+
+/* ============================================================
+   Mock Data
+   ============================================================ */
+const TAG_OPTIONS = ['AI','STEAM','Arduino','Python','Scratch','3D列印','機器人','國小','國中','高中','營隊','師培'];
+
+const INITIAL_PLANS = [
+  { id:1, name:'AI教育推廣計畫', code:'PLAN-2024-001', source:'教育部專案經費', totalBudget:300000, usedBudget:120000, remainingBudget:180000, startDate:'2024-01-01', endDate:'2024-12-31', status:'進行中' },
+  { id:2, name:'STEAM跨域學習計畫', code:'PLAN-2024-002', source:'縣市政府補助', totalBudget:200000, usedBudget:105000, remainingBudget:95000, startDate:'2024-03-01', endDate:'2024-11-30', status:'進行中' },
+  { id:3, name:'機器人競賽培訓計畫', code:'PLAN-2024-003', source:'企業贊助經費', totalBudget:150000, usedBudget:90000, remainingBudget:60000, startDate:'2024-02-15', endDate:'2024-10-15', status:'待核銷' },
+  { id:4, name:'國中科技營隊計畫', code:'PLAN-2023-014', source:'校內自籌款', totalBudget:120000, usedBudget:120000, remainingBudget:0, startDate:'2023-07-01', endDate:'2023-12-31', status:'已結案' },
+];
+
+const INITIAL_TEACHERS = [
+  { id:1, name:'王老師', phone:'0912-345-678', email:'wang@courseops.edu', region:'台北', fee:2500, tags:['AI','Python','國中','師培'], status:'合作中', pastCourses:12 },
+  { id:2, name:'陳老師', phone:'0922-111-222', email:'chen@courseops.edu', region:'新竹', fee:2200, tags:['STEAM','Arduino','機器人','國小'], status:'合作中', pastCourses:8 },
+  { id:3, name:'林老師', phone:'0933-222-333', email:'lin@courseops.edu', region:'台中', fee:2000, tags:['Scratch','3D列印','營隊','國小'], status:'合作中', pastCourses:15 },
+  { id:4, name:'張老師', phone:'0955-444-555', email:'chang@courseops.edu', region:'高雄', fee:2800, tags:['AI','STEAM','機器人','高中'], status:'評估中', pastCourses:5 },
+  { id:5, name:'李老師', phone:'0966-777-888', email:'lee@courseops.edu', region:'台南', fee:2300, tags:['Python','Scratch','國小','國中'], status:'合作中', pastCourses:9 },
+  { id:6, name:'吳老師', phone:'0977-888-999', email:'wu@courseops.edu', region:'台北', fee:3000, tags:['AI','機器人','師培','高中'], status:'合作中', pastCourses:20 },
+];
+
+const INITIAL_COURSES = [
+  { id:1, name:'AI STEAM 自走車課程', type:'營隊課程', sessions:12, hoursPerSession:2, target:'國中', startDate:'2024-07-01', endDate:'2024-07-15', plan:'AI教育推廣計畫', teachers:['王老師','張老師'], status:'進行中' },
+  { id:2, name:'Arduino 感測器入門', type:'社團課程', sessions:8, hoursPerSession:1.5, target:'國小', startDate:'2024-09-01', endDate:'2024-10-20', plan:'STEAM跨域學習計畫', teachers:['陳老師'], status:'待開課' },
+  { id:3, name:'3D列印創客營', type:'營隊課程', sessions:6, hoursPerSession:3, target:'國小', startDate:'2024-01-20', endDate:'2024-01-25', plan:'機器人競賽培訓計畫', teachers:['林老師'], status:'已完成' },
+  { id:4, name:'Python資料分析入門', type:'學期課程', sessions:16, hoursPerSession:1.5, target:'高中', startDate:'2024-09-05', endDate:'2025-01-20', plan:'AI教育推廣計畫', teachers:['李老師','吳老師'], status:'待開課' },
+  { id:5, name:'機器人競賽集訓營', type:'營隊課程', sessions:10, hoursPerSession:3, target:'國中', startDate:'2024-08-05', endDate:'2024-08-16', plan:'機器人競賽培訓計畫', teachers:['張老師','陳老師'], status:'進行中' },
+];
+
+/* ============================================================
+   Small shared UI pieces
+   ============================================================ */
+function Icon({ name }) {
+  const paths = {
+    dashboard:  <path d="M3 13h8V3H3v10zm10 8h8V11h-8v10zM3 21h8v-6H3v6zM13 3v6h8V3h-8z" />,
+    plans:      <path d="M4 4h16v4H4V4zm0 6h16v10H4V10zm3 3h4v4H7v-4z" />,
+    teachers:   <path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 0114 0v1H5v-1z" />,
+    courses:    <path d="M4 5a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 4h10M6 13h10M6 17h6" />,
+    create:     <path d="M12 5v14M5 12h14" />,
+    settings:   <path d="M12 15a3 3 0 100-6 3 3 0 000 6zm8-3a8.1 8.1 0 00-.15-1.55l2-1.55-2-3.46-2.36.95a8 8 0 00-2.7-1.56L14.4 2h-4.8l-.4 2.83a8 8 0 00-2.7 1.56l-2.36-.95-2 3.46 2 1.55a8.1 8.1 0 000 3.1l-2 1.55 2 3.46 2.36-.95a8 8 0 002.7 1.56l.4 2.83h4.8l.4-2.83a8 8 0 002.7-1.56l2.36.95 2-3.46-2-1.55c.1-.5.15-1.02.15-1.55z" />,
+    search:     <path d="M11 19a8 8 0 100-16 8 8 0 000 16zm10 2l-4.35-4.35" />,
+    check:      <path d="M5 13l4 4L19 7" />,
+  };
+  return (
+    <svg className="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {paths[name]}
+    </svg>
+  );
+}
+
+function Badge({ status }) {
+  const map = {
+    '進行中':  'badge-green',
+    '待開課':  'badge-blue',
+    '待核銷':  'badge-amber',
+    '已完成':  'badge-gray',
+    '已結案':  'badge-gray',
+    '合作中':  'badge-green',
+    '評估中':  'badge-amber',
+  };
+  return <span className={`badge ${map[status] || 'badge-gray'}`}>{status}</span>;
+}
+
+function fmtMoney(n){ return 'NT$ ' + n.toLocaleString(); }
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+const NAV_ITEMS = [
+  { key:'dashboard', label:'Dashboard', icon:'dashboard' },
+  { key:'plans',     label:'計畫資料庫', icon:'plans' },
+  { key:'teachers',  label:'老師資料庫', icon:'teachers' },
+  { key:'courses',   label:'課程資料庫', icon:'courses' },
+  { key:'wizard',    label:'建立課程',   icon:'create' },
+  { key:'settings',  label:'設定',       icon:'settings' },
+];
+
+function Sidebar({ page, setPage, open, setOpen }) {
+  return (
+    <>
+      <div className={`overlay ${open ? 'show' : ''}`} onClick={() => setOpen(false)}></div>
+      <aside className={`sidebar ${open ? 'open' : ''}`}>
+        <div className="sidebar-brand">
+          <div className="mark">CO</div>
+          <div className="name">CourseOps<span>課程營運管理系統</span></div>
+        </div>
+        <nav className="sidebar-nav">
+          {NAV_ITEMS.map(item => (
+            <button
+              key={item.key}
+              className={`nav-item ${page === item.key ? 'active' : ''}`}
+              onClick={() => { setPage(item.key); setOpen(false); }}
+            >
+              <Icon name={item.icon} />
+              {item.label}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-footer">© 2026 CourseOps Internal</div>
+      </aside>
+    </>
+  );
+}
+
+/* ============================================================
+   Login Page
+   ============================================================ */
+function LoginPage({ onLogin }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  function submit(e){
+    e.preventDefault();
+    onLogin();
+  }
+
+  return (
+    <div className="login-wrap">
+      <form className="login-card" onSubmit={submit}>
+        <div className="login-logo">CO</div>
+        <div className="login-title">CourseOps 課程營運管理系統</div>
+        <div className="login-sub">內部教育機構課程開課管理後台</div>
+
+        <div className="field">
+          <label>Email</label>
+          <input type="email" placeholder="name@courseops.edu" value={email} onChange={e=>setEmail(e.target.value)} required />
+        </div>
+        <div className="field">
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" value={password} onChange={e=>setPassword(e.target.value)} required />
+        </div>
+        <button type="submit" className="btn btn-primary">Login 登入</button>
+        <div className="login-hint">這是 MVP 原型，輸入任意帳密即可登入體驗</div>
+      </form>
+    </div>
+  );
+}
+
+/* ============================================================
+   Topbar (shared)
+   ============================================================ */
+function Topbar({ title, onMenu }) {
+  return (
+    <div className="topbar">
+      <div style={{display:'flex', alignItems:'center', gap:14}}>
+        <button className="menu-toggle" onClick={onMenu} aria-label="開啟選單">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div className="title">{title}</div>
+      </div>
+      <div className="right">
+        <div className="avatar">內部</div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Dashboard
+   ============================================================ */
+function Dashboard({ plans, teachers, courses }) {
+  const stats = [
+    { label:'進行中課程', value: courses.filter(c=>c.status==='進行中').length, icon:'courses' },
+    { label:'本月課程',   value: courses.filter(c=>c.startDate.slice(0,7)==='2024-09' || c.startDate.slice(0,7)==='2024-08').length, icon:'dashboard' },
+    { label:'合作老師',   value: teachers.filter(t=>t.status==='合作中').length, icon:'teachers' },
+    { label:'有效計畫',   value: plans.filter(p=>p.status==='進行中').length, icon:'plans' },
+  ];
+
+  const recentCourses = [...courses].slice(-3).reverse();
+  const upcoming = courses.filter(c=>c.status==='待開課');
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <h1>Dashboard 總覽</h1>
+          <p>歡迎回來，這裡是課程營運的即時概況</p>
+        </div>
+      </div>
+
+      <div className="stat-grid">
+        {stats.map(s => (
+          <div className="stat-card" key={s.label}>
+            <div className="top">
+              <span className="label">{s.label}</span>
+              <span className="icon"><Icon name={s.icon} /></span>
+            </div>
+            <span className="value">{s.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid-2">
+        <div className="panel">
+          <h2>最近建立課程</h2>
+          <div className="panel-stack">
+            {recentCourses.map(c => (
+              <div className="list-row" key={c.id}>
+                <div>
+                  <div className="name">{c.name}</div>
+                  <div className="meta">{c.type} ・ {c.target} ・ 共 {c.sessions} 堂</div>
+                </div>
+                <Badge status={c.status} />
+              </div>
+            ))}
+          </div>
+
+          <h2>即將開課提醒</h2>
+          <div className="panel-stack" style={{marginBottom:0}}>
+            {upcoming.length === 0 && <div className="empty-state">目前沒有待開課的課程</div>}
+            {upcoming.map(c => (
+              <div className="list-row" key={c.id}>
+                <div>
+                  <div className="name">{c.name}</div>
+                  <div className="meta">開課日期：{c.startDate} ・ 指派老師：{c.teachers.join('、')}</div>
+                </div>
+                <Badge status={c.status} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel">
+          <h2>計畫預算概覽</h2>
+          {plans.map(p => {
+            const pct = p.totalBudget ? Math.round((p.usedBudget / p.totalBudget) * 100) : 0;
+            return (
+              <div className="budget-row" key={p.id}>
+                <div className="head">
+                  <span className="name">{p.name}</span>
+                  <span className="nums">{fmtMoney(p.usedBudget)} / {fmtMoney(p.totalBudget)}</span>
+                </div>
+                <div className="bar-bg"><div className="bar-fill" style={{width: pct + '%'}}></div></div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Plans Page
+   ============================================================ */
+function PlansPage({ plans, onMenu }) {
+  const [query, setQuery] = useState('');
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return plans;
+    return plans.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.code.toLowerCase().includes(q) ||
+      p.source.toLowerCase().includes(q)
+    );
+  }, [plans, query]);
+
+  return (
+    <>
+      <Topbar title="計畫資料庫" onMenu={onMenu} />
+      <div className="page">
+        <div className="page-header">
+          <div>
+            <h1>計畫資料庫</h1>
+            <p>管理經費計畫與預算使用狀況</p>
+          </div>
+        </div>
+
+        <div className="toolbar">
+          <div className="search-box">
+            <span className="ic"><Icon name="search" /></span>
+            <input placeholder="搜尋計畫名稱、編號或經費來源" value={query} onChange={e=>setQuery(e.target.value)} />
+          </div>
+          <div className="toolbar-actions">
+            <button className="btn btn-primary btn-sm">＋ 新增計畫</button>
+          </div>
+        </div>
+
+        <div className="table-wrap">
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>計畫名稱</th>
+                  <th>計畫編號</th>
+                  <th>經費來源</th>
+                  <th>總預算</th>
+                  <th>已使用</th>
+                  <th>剩餘</th>
+                  <th>計畫期間</th>
+                  <th>狀態</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(p => (
+                  <tr key={p.id}>
+                    <td className="cell-strong">{p.name}</td>
+                    <td>{p.code}</td>
+                    <td>{p.source}</td>
+                    <td>{fmtMoney(p.totalBudget)}</td>
+                    <td>{fmtMoney(p.usedBudget)}</td>
+                    <td>{fmtMoney(p.remainingBudget)}</td>
+                    <td>
+                      <div>{p.startDate}</div>
+                      <div className="cell-sub">至 {p.endDate}</div>
+                    </td>
+                    <td><Badge status={p.status} /></td>
+                    <td><button className="btn btn-outline btn-sm">編輯</button></td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr><td colSpan="9"><div className="empty-state">找不到符合條件的計畫</div></td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ============================================================
+   Teachers Page
+   ============================================================ */
+function TeacherCard({ teacher, selectable, selected, onToggle }) {
+  return (
+    <div
+      className={`teacher-card ${selectable ? 'selectable' : ''} ${selected ? 'selected' : ''}`}
+      onClick={selectable ? onToggle : undefined}
+    >
+      <div className="t-head">
+        <div className="t-avatar">{teacher.name.slice(0,1)}</div>
+        <div>
+          <div className="t-name">{teacher.name}</div>
+          <div className="t-region">{teacher.region} ・ 講師費 {fmtMoney(teacher.fee)}/堂</div>
+        </div>
+        {selectable && (
+          <div className="check-dot">{selected ? <Icon name="check" /> : ''}</div>
+        )}
+        {!selectable && <Badge status={teacher.status} />}
+      </div>
+      <div className="t-tags">
+        {teacher.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}
+      </div>
+      <div className="t-stats">
+        <div><b>{teacher.pastCourses}</b>過去開課次數</div>
+        <div><b>{teacher.phone}</b>聯絡電話</div>
+      </div>
+    </div>
+  );
+}
+
+function TeachersPage({ teachers, onMenu }) {
+  const [query, setQuery] = useState('');
+  const [activeTags, setActiveTags] = useState([]);
+
+  function toggleTag(tag){
+    setActiveTags(prev => prev.includes(tag) ? prev.filter(t=>t!==tag) : [...prev, tag]);
+  }
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return teachers.filter(t => {
+      const matchQ = !q || t.name.toLowerCase().includes(q) || t.region.toLowerCase().includes(q) || t.email.toLowerCase().includes(q);
+      const matchTags = activeTags.length === 0 || activeTags.every(tag => t.tags.includes(tag));
+      return matchQ && matchTags;
+    });
+  }, [teachers, query, activeTags]);
+
+  return (
+    <>
+      <Topbar title="老師資料庫" onMenu={onMenu} />
+      <div className="page">
+        <div className="page-header">
+          <div>
+            <h1>老師資料庫</h1>
+            <p>管理合作講師資訊與專長標籤</p>
+          </div>
+        </div>
+
+        <div className="toolbar">
+          <div className="search-box">
+            <span className="ic"><Icon name="search" /></span>
+            <input placeholder="搜尋老師姓名、地區或 Email" value={query} onChange={e=>setQuery(e.target.value)} />
+          </div>
+          <div className="toolbar-actions">
+            <button className="btn btn-primary btn-sm">＋ 新增老師</button>
+          </div>
+        </div>
+
+        <div className="filter-bar">
+          {TAG_OPTIONS.map(tag => (
+            <span
+              key={tag}
+              className={`tag selectable ${activeTags.includes(tag) ? 'active' : ''}`}
+              onClick={() => toggleTag(tag)}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div className="teacher-grid">
+          {filtered.map(t => <TeacherCard key={t.id} teacher={t} />)}
+          {filtered.length === 0 && <div className="empty-state">找不到符合條件的老師</div>}
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ============================================================
+   Courses Page
+   ============================================================ */
+function CoursesPage({ courses, onMenu, goCreate }) {
+  const [query, setQuery] = useState('');
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return courses;
+    return courses.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      c.type.toLowerCase().includes(q) ||
+      c.target.toLowerCase().includes(q) ||
+      c.plan.toLowerCase().includes(q)
+    );
+  }, [courses, query]);
+
+  return (
+    <>
+      <Topbar title="課程資料庫" onMenu={onMenu} />
+      <div className="page">
+        <div className="page-header">
+          <div>
+            <h1>課程資料庫</h1>
+            <p>檢視並管理所有已建立的課程紀錄</p>
+          </div>
+        </div>
+
+        <div className="toolbar">
+          <div className="search-box">
+            <span className="ic"><Icon name="search" /></span>
+            <input placeholder="搜尋課程名稱、類型、對象或計畫" value={query} onChange={e=>setQuery(e.target.value)} />
+          </div>
+          <div className="toolbar-actions">
+            <button className="btn btn-primary btn-sm" onClick={goCreate}>＋ 新增課程</button>
+          </div>
+        </div>
+
+        <div className="table-wrap">
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>課程名稱</th>
+                  <th>類型</th>
+                  <th>堂數 / 時數</th>
+                  <th>對象</th>
+                  <th>課程期間</th>
+                  <th>使用計畫</th>
+                  <th>指派老師</th>
+                  <th>狀態</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(c => (
+                  <tr key={c.id}>
+                    <td className="cell-strong">{c.name}</td>
+                    <td>{c.type}</td>
+                    <td>{c.sessions} 堂 ・ {c.hoursPerSession} 小時/堂</td>
+                    <td>{c.target}</td>
+                    <td>
+                      <div>{c.startDate}</div>
+                      <div className="cell-sub">至 {c.endDate}</div>
+                    </td>
+                    <td>{c.plan}</td>
+                    <td>{c.teachers.join('、')}</td>
+                    <td><Badge status={c.status} /></td>
+                    <td><button className="btn btn-outline btn-sm">編輯</button></td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr><td colSpan="9"><div className="empty-state">找不到符合條件的課程</div></td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ============================================================
+   Create Course Wizard
+   ============================================================ */
+const COURSE_TYPES = ['營隊課程','社團課程','學期課程','師培工作坊'];
+const TARGETS = ['國小','國中','高中','師培/教師'];
+
+const STEP_LABELS = ['課程基本資料', '選擇經費計畫', '選擇授課老師', '確認資料'];
+
+function StepperHeader({ step }) {
+  return (
+    <div className="stepper">
+      {STEP_LABELS.map((label, idx) => {
+        const num = idx + 1;
+        const cls = num < step ? 'done' : (num === step ? 'active' : '');
+        return (
+          <React.Fragment key={label}>
+            <div className={`step ${cls}`}>
+              <div className="step-circle">{num < step ? <Icon name="check" /> : num}</div>
+              <div className="step-label">{label}</div>
+            </div>
+            {idx < STEP_LABELS.length - 1 && <div className="step-line"></div>}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
+function CreateCourseWizard({ plans, teachers, onMenu, onCreated }) {
+  const [step, setStep] = useState(1);
+  const [done, setDone] = useState(false);
+
+  const [form, setForm] = useState({
+    name:'', type: COURSE_TYPES[0], sessions:'', hoursPerSession:'', target: TARGETS[0],
+    startDate:'', endDate:''
+  });
+  const [planId, setPlanId] = useState(null);
+  const [teacherIds, setTeacherIds] = useState([]);
+
+  const [tQuery, setTQuery] = useState('');
+  const [tTags, setTTags] = useState([]);
+
+  function updateForm(key, value){ setForm(prev => ({...prev, [key]: value})); }
+  function toggleTeacher(id){
+    setTeacherIds(prev => prev.includes(id) ? prev.filter(x=>x!==id) : [...prev, id]);
+  }
+  function toggleTag(tag){
+    setTTags(prev => prev.includes(tag) ? prev.filter(t=>t!==tag) : [...prev, tag]);
+  }
+
+  const filteredTeachers = useMemo(() => {
+    const q = tQuery.trim().toLowerCase();
+    return teachers.filter(t => {
+      const matchQ = !q || t.name.toLowerCase().includes(q) || t.region.toLowerCase().includes(q);
+      const matchTags = tTags.length === 0 || tTags.every(tag => t.tags.includes(tag));
+      return matchQ && matchTags;
+    });
+  }, [teachers, tQuery, tTags]);
+
+  const selectedPlan = plans.find(p => p.id === planId);
+  const selectedTeachers = teachers.filter(t => teacherIds.includes(t.id));
+
+  const step1Valid = form.name && form.sessions && form.hoursPerSession && form.startDate && form.endDate;
+
+  function next(){ if (step < 4) setStep(step + 1); }
+  function back(){ if (step > 1) setStep(step - 1); }
+
+  function createCourse(){
+    setDone(true);
+    onCreated && onCreated({
+      id: Date.now(),
+      name: form.name,
+      type: form.type,
+      sessions: Number(form.sessions),
+      hoursPerSession: Number(form.hoursPerSession),
+      target: form.target,
+      startDate: form.startDate,
+      endDate: form.endDate,
+      plan: selectedPlan ? selectedPlan.name : '—',
+      teachers: selectedTeachers.map(t => t.name),
+      status: '待開課',
+    });
+  }
+
+  function reset(){
+    setStep(1); setDone(false);
+    setForm({ name:'', type: COURSE_TYPES[0], sessions:'', hoursPerSession:'', target: TARGETS[0], startDate:'', endDate:'' });
+    setPlanId(null); setTeacherIds([]); setTQuery(''); setTTags([]);
+  }
+
+  return (
+    <>
+      <Topbar title="建立課程" onMenu={onMenu} />
+      <div className="page">
+        <div className="page-header">
+          <div>
+            <h1>建立課程流程</h1>
+            <p>依照步驟填寫課程資料、選擇計畫與老師，即可完成建立</p>
+          </div>
+        </div>
+
+        {!done && <StepperHeader step={step} />}
+
+        {done ? (
+          <div className="wizard-card">
+            <div className="success-box">
+              <div className="check"><Icon name="check" /></div>
+              <h2 style={{fontSize:18, fontWeight:800}}>課程建立成功！</h2>
+              <p style={{color:'var(--text-light)', fontSize:14}}>「{form.name}」已加入課程資料庫，狀態為「待開課」</p>
+              <div style={{display:'flex', gap:10, marginTop:6}}>
+                <button className="btn btn-outline" onClick={reset}>再建立一筆課程</button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="wizard-card">
+
+            {step === 1 && (
+              <div className="form-grid">
+                <div className="form-field full">
+                  <label>課程名稱</label>
+                  <input value={form.name} onChange={e=>updateForm('name', e.target.value)} placeholder="例如：AI STEAM 自走車課程" />
+                </div>
+                <div className="form-field">
+                  <label>課程類型</label>
+                  <select value={form.type} onChange={e=>updateForm('type', e.target.value)}>
+                    {COURSE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label>對象</label>
+                  <select value={form.target} onChange={e=>updateForm('target', e.target.value)}>
+                    {TARGETS.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label>堂數</label>
+                  <input type="number" min="1" value={form.sessions} onChange={e=>updateForm('sessions', e.target.value)} placeholder="例如：12" />
+                </div>
+                <div className="form-field">
+                  <label>每堂時數（小時）</label>
+                  <input type="number" min="0.5" step="0.5" value={form.hoursPerSession} onChange={e=>updateForm('hoursPerSession', e.target.value)} placeholder="例如：2" />
+                </div>
+                <div className="form-field">
+                  <label>開課日期</label>
+                  <input type="date" value={form.startDate} onChange={e=>updateForm('startDate', e.target.value)} />
+                </div>
+                <div className="form-field">
+                  <label>結束日期</label>
+                  <input type="date" value={form.endDate} onChange={e=>updateForm('endDate', e.target.value)} />
+                </div>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="plan-grid">
+                {plans.map(p => (
+                  <div
+                    key={p.id}
+                    className={`plan-card ${planId === p.id ? 'selected' : ''}`}
+                    onClick={() => setPlanId(p.id)}
+                  >
+                    <div className="pc-head">
+                      <span className="pc-name">{p.name}</span>
+                      <Badge status={p.status} />
+                    </div>
+                    <div className="pc-row"><span>剩餘預算</span><b>{fmtMoney(p.remainingBudget)}</b></div>
+                    <div className="pc-row"><span>計畫期間</span><b>{p.startDate} ～ {p.endDate}</b></div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {step === 3 && (
+              <>
+                <div className="toolbar" style={{marginBottom:14}}>
+                  <div className="search-box">
+                    <span className="ic"><Icon name="search" /></span>
+                    <input placeholder="搜尋老師姓名或地區" value={tQuery} onChange={e=>setTQuery(e.target.value)} />
+                  </div>
+                  <div style={{fontSize:13, color:'var(--text-light)'}}>已選擇 {selectedTeachers.length} 位老師</div>
+                </div>
+                <div className="filter-bar">
+                  {TAG_OPTIONS.map(tag => (
+                    <span key={tag} className={`tag selectable ${tTags.includes(tag) ? 'active' : ''}`} onClick={() => toggleTag(tag)}>{tag}</span>
+                  ))}
+                </div>
+                <div className="teacher-grid">
+                  {filteredTeachers.map(t => (
+                    <TeacherCard
+                      key={t.id}
+                      teacher={t}
+                      selectable
+                      selected={teacherIds.includes(t.id)}
+                      onToggle={() => toggleTeacher(t.id)}
+                    />
+                  ))}
+                  {filteredTeachers.length === 0 && <div className="empty-state">找不到符合條件的老師</div>}
+                </div>
+              </>
+            )}
+
+            {step === 4 && (
+              <>
+                <div className="summary-block">
+                  <h3>課程基本資料</h3>
+                  <div className="summary-grid">
+                    <div><div className="k">課程名稱</div><div className="v">{form.name || '—'}</div></div>
+                    <div><div className="k">課程類型</div><div className="v">{form.type}</div></div>
+                    <div><div className="k">堂數 / 時數</div><div className="v">{form.sessions || '—'} 堂 ・ {form.hoursPerSession || '—'} 小時/堂</div></div>
+                    <div><div className="k">對象</div><div className="v">{form.target}</div></div>
+                    <div><div className="k">開課日期</div><div className="v">{form.startDate || '—'}</div></div>
+                    <div><div className="k">結束日期</div><div className="v">{form.endDate || '—'}</div></div>
+                  </div>
+                </div>
+
+                <div className="summary-block">
+                  <h3>使用計畫</h3>
+                  {selectedPlan ? (
+                    <div className="summary-grid">
+                      <div><div className="k">計畫名稱</div><div className="v">{selectedPlan.name}</div></div>
+                      <div><div className="k">剩餘預算</div><div className="v">{fmtMoney(selectedPlan.remainingBudget)}</div></div>
+                      <div><div className="k">計畫期間</div><div className="v">{selectedPlan.startDate} ～ {selectedPlan.endDate}</div></div>
+                      <div><div className="k">狀態</div><div className="v"><Badge status={selectedPlan.status} /></div></div>
+                    </div>
+                  ) : <p style={{fontSize:13, color:'var(--text-light)'}}>尚未選擇計畫</p>}
+                </div>
+
+                <div className="summary-block" style={{marginBottom:0}}>
+                  <h3>授課老師</h3>
+                  {selectedTeachers.length > 0 ? (
+                    <div style={{display:'flex', flexWrap:'wrap', gap:8}}>
+                      {selectedTeachers.map(t => (
+                        <span className="tag" key={t.id}>{t.name} ・ {t.region}</span>
+                      ))}
+                    </div>
+                  ) : <p style={{fontSize:13, color:'var(--text-light)'}}>尚未選擇老師</p>}
+                </div>
+              </>
+            )}
+
+            <div className="wizard-actions">
+              <button className="btn btn-ghost" onClick={back} disabled={step === 1} style={{visibility: step === 1 ? 'hidden' : 'visible'}}>← 上一步</button>
+              {step < 4 ? (
+                <button className="btn btn-primary" onClick={next} disabled={step === 1 && !step1Valid}>下一步 →</button>
+              ) : (
+                <button className="btn btn-primary" onClick={createCourse}>建立課程</button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+/* ============================================================
+   Settings Page
+   ============================================================ */
+function SettingsPage({ onMenu }) {
+  const items = [
+    { title:'帳號資訊', desc:'管理內部使用者帳號、密碼與登入紀錄。' },
+    { title:'通知設定', desc:'設定即將開課提醒、預算警示等通知頻率。' },
+    { title:'計畫類別管理', desc:'維護經費來源類別與計畫編號規則。' },
+    { title:'老師標籤管理', desc:'新增或編輯老師專長標籤選項，供篩選使用。' },
+  ];
+  return (
+    <>
+      <Topbar title="設定" onMenu={onMenu} />
+      <div className="page">
+        <div className="page-header">
+          <div>
+            <h1>系統設定</h1>
+            <p>此區塊為原型示意，尚未串接實際設定功能</p>
+          </div>
+        </div>
+        <div className="settings-grid">
+          {items.map(item => (
+            <div className="settings-item" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ============================================================
+   App
+   ============================================================ */
+function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [page, setPage] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [courses, setCourses] = useState(INITIAL_COURSES);
+
+  if (!loggedIn) {
+    return <LoginPage onLogin={() => setLoggedIn(true)} />;
+  }
+
+  function handleCreated(course){
+    setCourses(prev => [...prev, course]);
+  }
+
+  const pageTitles = {
+    dashboard:'Dashboard', plans:'計畫資料庫', teachers:'老師資料庫',
+    courses:'課程資料庫', wizard:'建立課程', settings:'設定'
+  };
+
+  return (
+    <div className="shell">
+      <Sidebar page={page} setPage={setPage} open={sidebarOpen} setOpen={setSidebarOpen} />
+      <div className="main">
+        {page === 'dashboard' && (
+          <>
+            <Topbar title={pageTitles[page]} onMenu={() => setSidebarOpen(true)} />
+            <Dashboard plans={INITIAL_PLANS} teachers={INITIAL_TEACHERS} courses={courses} />
+          </>
+        )}
+        {page === 'plans' && <PlansPage plans={INITIAL_PLANS} onMenu={() => setSidebarOpen(true)} />}
+        {page === 'teachers' && <TeachersPage teachers={INITIAL_TEACHERS} onMenu={() => setSidebarOpen(true)} />}
+        {page === 'courses' && (
+          <CoursesPage
+            courses={courses}
+            onMenu={() => setSidebarOpen(true)}
+            goCreate={() => setPage('wizard')}
+          />
+        )}
+        {page === 'wizard' && (
+          <CreateCourseWizard
+            plans={INITIAL_PLANS}
+            teachers={INITIAL_TEACHERS}
+            onMenu={() => setSidebarOpen(true)}
+            onCreated={handleCreated}
+          />
+        )}
+        {page === 'settings' && <SettingsPage onMenu={() => setSidebarOpen(true)} />}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
