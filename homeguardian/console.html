@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="守家控制台：設備控制、事件處理、提醒排程、情境規則與家屬通知的後台原型（模擬數據）。">
+<meta property="og:description" content="守家控制台：設備控制、事件處理、提醒排程、情境規則與家屬通知的後台原型（模擬數據）。">
+<meta property="og:site_name" content="DesignJarvis">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>守家控制台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* 版面：左側石徑導覽＋右側工作區。同一套白砂、墨、苔、弁柄色；操作介面以黑體為主，明朝只用在標題與狀態大字。 */
+:root{
+  --sand:#E7E4DB; --sand-2:#DCD8CC; --card:#EFEDE6; --line:#C4BEAE; --line-2:#D3CEC1;
+  --ink:#24231E; --ink-2:#5C594F; --ink-3:#8A867B;
+  --stone-dark:#45433D; --moss:#56692F; --bengara:#93442D; --ochre:#946A1C; --lamp:#C99A45;
+  --s-local:#6B8A2E; --s-cloud:#3B5FA0; --heat:#56692F;
+  --c-fire:#9A4A31; --c-moon:#46617F; --c-leaf:#5D7344; --c-sun:#B08D4A; --c-star:#655279;
+  --f-display:"Zen Old Mincho","Noto Serif TC","Songti TC",serif;
+  --f-ui:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sand:#1A1A17; --sand-2:#21211D; --card:#262622; --line:#3E3C35; --line-2:#33322C;
+  --ink:#E4E0D4; --ink-2:#A8A497; --ink-3:#7A776D;
+  --stone-dark:#6A675F; --moss:#8FAA5A; --bengara:#D0765A; --ochre:#D3A24A; --lamp:#E2B566;
+  --s-local:#82A042; --s-cloud:#5F86CC; --heat:#9DB86A;
+  --c-fire:#C26B50; --c-moon:#7896B8; --c-leaf:#8FA670; --c-sun:#D2B06A; --c-star:#9A86B0;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --sand:#1A1A17; --sand-2:#21211D; --card:#262622; --line:#3E3C35; --line-2:#33322C;
+  --ink:#E4E0D4; --ink-2:#A8A497; --ink-3:#7A776D;
+  --stone-dark:#6A675F; --moss:#8FAA5A; --bengara:#D0765A; --ochre:#D3A24A; --lamp:#E2B566;
+  --s-local:#82A042; --s-cloud:#5F86CC; --heat:#9DB86A;
+  --c-fire:#C26B50; --c-moon:#7896B8; --c-leaf:#8FA670; --c-sun:#D2B06A; --c-star:#9A86B0;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--sand);color:var(--ink);font-family:var(--f-ui);font-size:14.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--bengara);outline-offset:2px}
+h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-2)}
+.faint{color:var(--ink-3)}
+
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+aside.side{background:var(--sand-2);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px}
+.seal{width:30px;height:30px;border:1.5px solid var(--bengara);color:var(--bengara);display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:17px;border-radius:3px;transform:rotate(-3deg);flex:none}
+.brand b{font-family:var(--f-display);font-size:18px;letter-spacing:.12em;font-weight:900}
+.brand small{display:block;font-size:11px;color:var(--ink-2);letter-spacing:.12em}
+.home{padding:10px 10px;border:1px solid var(--line);border-radius:3px;font-size:13px;display:grid;gap:2px}
+.home b{font-weight:500}
+nav.nav{display:grid;gap:2px}
+nav.nav button{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:8px;background:none;border:0;padding:8px 10px;border-radius:3px;cursor:pointer;text-align:left;color:var(--ink-2)}
+nav.nav button .g{font-family:var(--f-display);font-weight:900;font-size:18px;color:var(--ink-3);text-align:center}
+nav.nav button:hover{background:var(--card);color:var(--ink)}
+nav.nav button[aria-current="page"]{background:var(--ink);color:var(--sand)}
+nav.nav button[aria-current="page"] .g{color:var(--sand)}
+.badge{font-size:11px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--bengara);color:var(--sand);display:grid;place-items:center}
+.side-foot{margin-top:auto;font-size:12px;color:var(--ink-2);display:grid;gap:6px;padding:0 8px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--moss);margin-right:6px;vertical-align:1px}
+.dot.warn{background:var(--ochre)} .dot.crit{background:var(--bengara)} .dot.off{background:var(--ink-3)}
+
+main{padding:20px clamp(16px,3vw,36px) 48px;min-width:0}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.status{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:3px;border:1px solid var(--line);background:var(--card)}
+.status .big{font-family:var(--f-display);font-weight:900;font-size:17px;letter-spacing:.08em}
+.status.alert{border-color:var(--bengara);background:color-mix(in srgb,var(--bengara) 12%,var(--card))}
+.status.alert .big{color:var(--bengara)}
+.status.warn{border-color:var(--ochre)}
+.clock{font-size:13px;color:var(--ink-2);margin-left:auto}
+.btn{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:7px 12px;cursor:pointer;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--ink);color:var(--sand);border-color:var(--ink)}
+.btn.danger{color:var(--bengara);border-color:var(--bengara)}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.pop{position:relative}
+.pop-menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--line);border-radius:3px;padding:6px;min-width:220px;z-index:30;box-shadow:0 8px 24px rgba(0,0,0,.12);display:grid}
+.pop-menu button{background:none;border:0;text-align:left;padding:8px 10px;border-radius:2px;cursor:pointer;display:flex;justify-content:space-between;gap:12px}
+.pop-menu button:hover{background:var(--sand-2)}
+
+.phead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.phead h1{font-family:var(--f-display);font-weight:900;font-size:26px;letter-spacing:.08em}
+.phead p{color:var(--ink-2);font-size:13.5px;margin-top:2px}
+.grid{display:grid;gap:16px}
+.g-over{grid-template-columns:repeat(12,minmax(0,1fr))}
+.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:3px;padding:16px 18px;min-width:0}
+.card h2{font-size:14px;font-weight:700;letter-spacing:.06em;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.card h2 small{font-weight:400;color:var(--ink-2);font-size:12px;letter-spacing:0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13.5px}
+.kv dt{color:var(--ink-2)} .kv dd{margin:0}
+.elder{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.stone{width:62px;height:50px;border-radius:52% 48% 46% 54% / 60% 58% 42% 40%;background:var(--stone-dark);position:relative;flex:none}
+.stone::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:var(--sc,var(--moss));top:13px;left:22px}
+.elder .where{font-family:var(--f-display);font-weight:900;font-size:24px;letter-spacing:.08em}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:14px;border-top:1px solid var(--line-2)}
+.tiles div{padding:10px 10px 0 0}
+.tiles div+div{padding-left:12px;border-left:1px solid var(--line-2)}
+.tiles b{display:block;font-size:20px;font-weight:500}
+.tiles span{font-size:12px;color:var(--ink-2)}
+
+.sev{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:1px 8px;border-radius:2px;border:1px solid var(--line);white-space:nowrap}
+.sev::before{font-size:11px}
+.sev.info{color:var(--ink-2)} .sev.info::before{content:"○"}
+.sev.warn{color:var(--ochre);border-color:var(--ochre)} .sev.warn::before{content:"△"}
+.sev.crit{color:var(--bengara);border-color:var(--bengara)} .sev.crit::before{content:"◆"}
+.st{font-size:12px;white-space:nowrap}
+.st.pending{color:var(--bengara);font-weight:500} .st.auto{color:var(--moss)} .st.done{color:var(--ink-2)}
+.who{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.who i{width:8px;height:8px;border-radius:50%;background:var(--dotc,var(--stone-dark))}
+
+.list{display:grid}
+.list > div{display:grid;grid-template-columns:52px 1fr auto;gap:10px;padding:9px 0;border-top:1px dashed var(--line-2);align-items:start}
+.list > div:first-child{border-top:0}
+.list .t{font-size:12.5px;color:var(--ink-2);padding-top:1px}
+.empty{color:var(--ink-2);font-size:13.5px;padding:18px 0;text-align:center;border:1px dashed var(--line);border-radius:3px}
+
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-weight:500;font-size:12px;color:var(--ink-2);letter-spacing:.08em;white-space:nowrap}
+tr.row{cursor:pointer}
+tr.row:hover td{background:color-mix(in srgb,var(--sand-2) 60%,transparent)}
+tr.detail td{background:var(--sand-2);padding:14px 16px}
+.ev-detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+textarea,input[type=text],input[type=time],input[type=number],select{background:var(--sand);border:1px solid var(--line);border-radius:3px;padding:7px 10px;min-width:0}
+textarea{width:100%;min-height:64px;resize:vertical}
+label.f{display:grid;gap:4px;font-size:12.5px;color:var(--ink-2)}
+label.f > *{color:var(--ink);font-size:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12.5px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--sand);border-color:var(--ink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{background:none;border:0;padding:6px 14px;cursor:pointer;font-size:13px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sand)}
+
+.sw{width:38px;height:22px;border-radius:11px;border:1px solid var(--line);background:var(--sand-2);position:relative;cursor:pointer;flex:none;padding:0}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--ink-3);transition:left .15s,background .15s}
+.sw[aria-checked="true"]{background:var(--moss);border-color:var(--moss)}
+.sw[aria-checked="true"]::after{left:18px;background:var(--sand)}
+.sw:disabled{opacity:.5;cursor:not-allowed}
+
+/* 設備 */
+.dev-grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+.plan{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(6,38px);gap:4px}
+.room{border:1px solid var(--line);border-radius:2px;background:var(--sand);cursor:pointer;padding:5px 7px;font-size:12px;display:flex;flex-direction:column;justify-content:space-between;text-align:left}
+.room:hover{border-color:var(--ink-2)}
+.room[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.room .rn{font-weight:500}
+.room .rs{display:flex;gap:6px;align-items:center;color:var(--ink-2);font-size:11px}
+.room.alarm{border-color:var(--bengara);background:color-mix(in srgb,var(--bengara) 12%,var(--sand))}
+.elder-mark{font-family:var(--f-display);font-weight:900;color:var(--ink);font-size:12px}
+.rgroup{margin-bottom:18px}
+.rgroup h3{font-size:13px;color:var(--ink-2);letter-spacing:.1em;font-weight:500;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.dev{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 90px minmax(150px,auto);gap:12px;align-items:center;padding:10px 12px;background:var(--card);border:1px solid var(--line-2);border-radius:3px;margin-bottom:6px}
+.dev.alarm{border-color:var(--bengara)}
+.dev .dn{font-weight:500}
+.dev .dt{font-size:12px;color:var(--ink-2)}
+.dev .dv{font-size:13.5px}
+.dev .meta{font-size:12px;color:var(--ink-2);display:grid;gap:1px}
+.ctl{display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.ctl input[type=range]{width:90px;accent-color:var(--moss)}
+.batt.low{color:var(--bengara);font-weight:500}
+
+/* 規則 */
+.rule{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--line-2);border-radius:3px;margin-bottom:8px}
+.rule.off{opacity:.6}
+.rule h3{font-size:15px;margin-bottom:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.clause{display:grid;grid-template-columns:28px 1fr;gap:4px 8px;font-size:13.5px}
+.clause b{font-family:var(--f-display);font-weight:900;color:var(--ink-2)}
+.rule .rmeta{font-size:12px;color:var(--ink-2);margin-top:8px}
+.lock{font-size:11px;border:1px solid var(--line);padding:0 6px;border-radius:2px;color:var(--ink-2);font-weight:400}
+
+/* 提醒 */
+.adh{display:grid;grid-template-columns:repeat(7,22px);gap:4px}
+.adh span{width:22px;height:22px;border-radius:3px;display:grid;place-items:center;font-size:11px;border:1px solid var(--line-2)}
+.adh .ok{background:var(--moss);color:var(--sand);border-color:var(--moss)}
+.adh .late{background:color-mix(in srgb,var(--ochre) 30%,transparent);color:var(--ochre);border-color:var(--ochre)}
+.adh .miss{color:var(--bengara);border-color:var(--bengara)}
+.adh .up{color:var(--ink-3)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);align-items:center}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:-2px}
+form.add{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;padding:14px;border:1px dashed var(--line);border-radius:3px;margin-top:12px}
+
+/* 紀錄 */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line-2);border-radius:3px;background:var(--card)}
+.stats div{padding:14px 16px}
+.stats div+div{border-left:1px solid var(--line-2)}
+.stats b{display:block;font-size:24px;font-weight:500}
+.stats span{font-size:12px;color:var(--ink-2)}
+svg text{fill:var(--ink-2);font-family:var(--f-ui);font-size:11px}
+svg .grid-l{stroke:var(--line-2);stroke-width:1}
+svg .axis{stroke:var(--line);stroke-width:1}
+.chart{width:100%;height:auto;display:block}
+details.tv{margin-top:8px;font-size:12.5px}
+details.tv summary{cursor:pointer;color:var(--ink-2)}
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--sand);font-size:12px;padding:5px 9px;border-radius:3px;white-space:pre;display:none}
+
+/* 系統 */
+.meter{height:6px;background:var(--sand-2);border-radius:3px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--moss);border-radius:3px}
+.meter.warn i{background:var(--ochre)}
+.sys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.sys .card b{font-size:22px;font-weight:500;display:block}
+
+.toast{position:fixed;right:20px;bottom:20px;z-index:60;display:grid;gap:8px;max-width:340px}
+.toast div{background:var(--ink);color:var(--sand);padding:12px 14px;border-radius:3px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:up .25s ease}
+.toast div.crit{background:var(--bengara)}
+@keyframes up{from{transform:translateY(8px);opacity:.3}to{transform:none;opacity:1}}
+.sim-note{font-size:12px;color:var(--ink-3);margin-top:28px}
+
+@media (max-width:1100px){
+  .span-4,.span-5,.span-6,.span-7,.span-8{grid-column:span 12}
+  .sys{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dev-grid{grid-template-columns:1fr}
+  .plan{max-width:420px}
+}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  aside.side{position:sticky;top:env(safe-area-inset-top,0px);height:auto;z-index:20;flex-direction:row;align-items:center;padding:10px 16px;gap:12px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .home,.side-foot{display:none}
+  .brand small{display:none}
+  nav.nav{display:flex;gap:2px}
+  nav.nav button{grid-template-columns:auto auto;padding:6px 9px;gap:4px;white-space:nowrap}
+  nav.nav button .l{font-size:13px}
+  nav.nav button .badge{display:none}
+  .dev{grid-template-columns:minmax(0,1fr) auto;}
+  .dev .meta{display:none}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats div:nth-child(3){border-left:0}
+  .stats div:nth-child(n+3){border-top:1px solid var(--line-2)}
+  .ev-detail{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  nav.nav button .l{display:none}
+  .sys{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr}
+  .tiles div+div{padding-left:0;border-left:0;border-top:1px solid var(--line-2);padding-top:8px}
+  .clock{margin-left:0}
+  .dev .dv{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="seal" aria-hidden="true">守</span><div><b>守家</b><small>控制台</small></div></div>
+    <div class="home"><b id="home-name">示範家庭・阿嬤的家</b><span class="muted">主神 × 5 式守・29 台設備</span></div>
+    <nav class="nav" id="nav" aria-label="功能"></nav>
+    <div class="side-foot">
+      <span><span class="dot" id="foot-dot"></span>主神 <span data-live="hubState">本地運作中</span></span>
+      <span>雲端閘道 <span data-live="gw">已連線</span></span>
+      <span class="faint">所有數據皆為模擬</span>
+      <a href="./" style="color:var(--ink-2)">守家 產品展示頁 ↗</a>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+<div id="tip"></div>
+<div class="toast" id="toast" aria-live="assertive"></div>
+
+<script>
+(() => {
+/* ================= 工具 ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const pad=n=>String(n).padStart(2,'0');
+const hm=ts=>{const d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const dayKey=ts=>{const d=new Date(ts);d.setHours(0,0,0,0);return d.getTime()};
+function dayLabel(ts){const diff=Math.round((dayKey(Date.now())-dayKey(ts))/864e5);if(diff===0)return'今天';if(diff===1)return'昨天';const d=new Date(ts);return`${d.getMonth()+1}/${d.getDate()}`}
+function ago(ts){const m=Math.round((Date.now()-ts)/6e4);if(m<1)return'剛剛';if(m<60)return m+' 分鐘前';const h=Math.floor(m/60);if(h<24)return h+' 小時前';return Math.floor(h/24)+' 天前'}
+function rng(seed){let a=seed>>>0;return()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+const R=rng(dayKey(Date.now())/864e5|0);
+const at=(dayOff,h,m)=>{const d=new Date();d.setDate(d.getDate()-dayOff);d.setHours(h,m,0,0);return d.getTime()};
+
+/* ================= 靜態設定 ================= */
+const STONE={翠葉:'--c-leaf',蒼月:'--c-moon',赤火:'--c-fire',白日:'--c-sun',紫星:'--c-star',主神:'--stone-dark',雲端:'--s-cloud',家屬:'--ink-3'};
+const ROOMS=[
+  {id:'客廳',stone:'翠葉',grid:'1/1/4/5'},
+  {id:'廚房',stone:'赤火',grid:'1/5/3/6'},
+  {id:'玄關',stone:'白日',grid:'1/6/3/7'},
+  {id:'走廊',stone:'紫星',grid:'3/5/4/7'},
+  {id:'臥室',stone:'蒼月',grid:'4/1/7/3'},
+  {id:'餐廳',stone:null,grid:'4/3/7/5'},
+  {id:'浴室',stone:'紫星',grid:'4/5/7/7'}
+];
+const SEV={info:'資訊',warn:'注意',crit:'警示'};
+const STATUS={pending:'待處理',auto:'自動處理',done:'已處理'};
+
+/* ================= 種子資料 ================= */
+function seedDevices(){
+  const D=[]; const add=(room,name,type,kind,o={})=>D.push({id:uid(),room,name,type,kind,batt:o.batt??null,lqi:o.lqi??Math.round(140+R()*110),...o});
+  add('客廳','主神 中央主機','hub','hub',{batt:null,lqi:null,model:'Jetson Orin Nano SUPER'});
+  add('客廳','Aqara Zigbee Hub','zhub','hub',{batt:null,lqi:null});
+  add('客廳','翠葉 語音節點','voice','voice',{batt:null,model:'ATOM Echo'});
+  add('客廳','人體感測器','motion','sensor',{batt:88});
+  add('客廳','溫濕度感測器','th','sensor',{batt:76});
+  add('客廳','空氣品質感測器','air','sensor',{batt:null});
+  add('客廳','客廳主燈','light','control',{on:false,bri:70,w:12});
+  add('客廳','冷氣（紅外線）','ac','control',{on:true,set:26,w:850});
+  add('客廳','電視（紅外線）','tv','control',{on:false,w:95});
+  add('客廳','電暖器插座','plug','control',{on:false,w:1200});
+  add('臥室','蒼月 語音節點','voice','voice',{batt:null,model:'ATOM Echo'});
+  add('臥室','毫米波雷達','radar','sensor',{batt:null});
+  add('臥室','人體感測器','motion','sensor',{batt:64});
+  add('臥室','溫濕度感測器','th','sensor',{batt:81});
+  add('臥室','床頭燈','light','control',{on:false,bri:30,w:9});
+  add('廚房','赤火 語音節點','voice','voice',{batt:null,model:'ATOM Echo'});
+  add('廚房','煙霧感測器','smoke','sensor',{batt:92});
+  add('廚房','瓦斯感測器','gas','sensor',{batt:null});
+  add('廚房','電鍋插座','plug','control',{on:false,w:650});
+  add('廚房','廚房燈（繼電器）','relay','control',{on:false,w:18});
+  add('玄關','白日 語音節點','voice','voice',{batt:null,model:'ATOM Echo'});
+  add('玄關','大門門窗感測器','door','sensor',{batt:14,open:false});
+  add('玄關','人體感測器','motion','sensor',{batt:71});
+  add('走廊','紫星 語音節點','voice','voice',{batt:null,model:'ATOM Echo'});
+  add('走廊','人體感測器','motion','sensor',{batt:58});
+  add('走廊','走廊燈','light','control',{on:false,bri:30,w:9});
+  add('浴室','人體感測器','motion','sensor',{batt:49});
+  add('浴室','溫濕度感測器','th','sensor',{batt:67});
+  add('浴室','浴室燈（繼電器）','relay','control',{on:false,w:14});
+  return D;
+}
+function seedEvents(){
+  const E=[]; const add=(ts,o)=>{if(ts<=Date.now()) E.push({id:uid(),ts,note:'',...o})};
+  for(let d=0;d<7;d++){
+    const r=rng(9000+d);
+    add(at(d,2,10+Math.floor(r()*40)),{sev:'info',type:'夜間如廁',room:'臥室',who:'蒼月',text:`偵測下床，走廊與浴室燈自動開啟；${4+Math.floor(r()*6)} 分鐘後回到床上，燈光關閉。`,status:'auto'});
+    if(r()>.55) add(at(d,4,5+Math.floor(r()*40)),{sev:'info',type:'夜間如廁',room:'臥室',who:'蒼月',text:'偵測下床，走廊與浴室燈自動開啟。',status:'auto'});
+    add(at(d,7,30),{sev:'info',type:'出門保暖',room:'玄關',who:'白日',text:'玄關偵測有人，播報天氣與保暖提醒。',status:'auto'});
+    add(at(d,8,0),{sev:'info',type:'服藥提醒',room:'客廳',who:'翠葉',text:'播報早餐後血壓藥提醒，長者回覆「吃了」。',status:'auto'});
+  }
+  add(at(1,14,20),{sev:'warn',type:'電器未關',room:'客廳',who:'翠葉',text:'客廳無人 35 分鐘，電暖器插座仍耗電 1,180 W。語音詢問後長者同意，已斷電。',status:'auto'});
+  add(at(2,16,30),{sev:'warn',type:'久未活動',room:'臥室',who:'蒼月',text:'午睡後 3 小時未偵測到活動，語音詢問兩次無回應，已通知家屬。',status:'done',note:'大兒子致電確認，阿嬤在睡午覺，無異常。',handledAt:at(2,16,48)});
+  add(at(3,19,5),{sev:'warn',type:'大門未關',room:'玄關',who:'白日',text:'大門開啟超過 10 分鐘，已語音提醒，5 分鐘後關上。',status:'auto'});
+  add(Date.now()-95*6e4,{sev:'warn',type:'電量偏低',room:'玄關',who:'白日',text:'大門門窗感測器電量 14%，建議一週內更換 CR1632 電池。',status:'pending'});
+  return E.sort((a,b)=>b.ts-a.ts);
+}
+function seedReminders(){
+  return [
+    {id:uid(),time:'08:00',label:'早餐後血壓藥',kind:'服藥',days:'每天',node:'跟隨長者',on:true},
+    {id:uid(),time:'12:30',label:'午餐後胃藥',kind:'服藥',days:'每天',node:'跟隨長者',on:true},
+    {id:uid(),time:'20:00',label:'晚餐後血壓藥',kind:'服藥',days:'每天',node:'跟隨長者',on:true},
+    {id:uid(),time:'07:30',label:'出門前天氣與保暖',kind:'天氣',days:'每天',node:'白日・玄關',on:true},
+    {id:uid(),time:'15:00',label:'起來走走、喝杯水',kind:'作息',days:'每天',node:'跟隨長者',on:true},
+    {id:uid(),time:'09:30',label:'社區醫院回診',kind:'作息',days:'每週三',node:'跟隨長者',on:false}
+  ];
+}
+function seedRules(){
+  return [
+    {id:uid(),name:'夜間如廁照明',when:'臥室毫米波雷達偵測到下床',if:'時間在 22:00–06:00',then:'走廊、浴室燈以柔和亮度開啟；回到床上 5 分鐘後關閉',on:true,count:9,last:at(0,2,30)},
+    {id:uid(),name:'電器未關',when:'房間無人超過 30 分鐘',if:'該房插座功率大於 50 W',then:'就近式守語音詢問；10 分鐘無回應自動斷電',on:true,count:1,last:at(1,14,20)},
+    {id:uid(),name:'瓦斯／煙霧警示',when:'赤火偵測瓦斯或煙霧超過警戒值',if:'無條件',then:'全屋語音警示，並通知所有聯絡人',on:true,locked:true,count:0,last:null},
+    {id:uid(),name:'久未活動關心',when:'白天超過 3 小時未偵測活動',if:'長者在家',then:'語音詢問 2 次；無回應通知家屬',on:true,count:1,last:at(2,16,30)},
+    {id:uid(),name:'出門保暖',when:'玄關偵測到有人',if:'07:00–10:00 且氣溫低於 18°C',then:'白日播報天氣與保暖提醒',on:true,count:7,last:at(0,7,30)},
+    {id:uid(),name:'大門未關',when:'大門開啟超過 10 分鐘',if:'無條件',then:'語音提醒；22:00 後同時通知家屬',on:true,count:1,last:at(3,19,5)}
+  ];
+}
+function seedContacts(){
+  return [
+    {id:uid(),name:'大兒子',rel:'兒子',phone:'0900 000 101',ch:['App','電話'],order:1},
+    {id:uid(),name:'女兒',rel:'女兒',phone:'0900 000 102',ch:['App','簡訊'],order:2},
+    {id:uid(),name:'社區關懷據點',rel:'照護單位',phone:'07 000 0103',ch:['電話'],order:3}
+  ];
+}
+function seedNotify(){return{info:{App:false,簡訊:false,電話:false},warn:{App:true,簡訊:false,電話:false},crit:{App:true,簡訊:true,電話:true},quiet:true}}
+function seedPushes(){
+  return [
+    {id:uid(),ts:at(2,16,36),to:'大兒子、女兒',ch:'App',text:'臥室長時間未偵測到活動，語音詢問兩次未獲回應。'},
+    {id:uid(),ts:at(3,22,5),to:'大兒子、女兒',ch:'App',text:'每日摘要：夜間如廁 1 次，三次服藥皆已確認。'}
+  ].filter(p=>p.ts<=Date.now());
+}
+const PHRASES=[
+  ['翠葉','幫我開客廳的燈','開燈','local','好的，燈打開了。'],['翠葉','冷氣調到 26 度','冷氣設定','local','冷氣調到 26 度了。'],
+  ['翠葉','明天會下雨嗎','天氣查詢','cloud','明天下午可能下雨，出門記得帶傘。'],['翠葉','陪我聊聊天','陪伴對話','cloud','好呀，今天中午吃了什麼？'],
+  ['翠葉','電視轉到新聞台','電視控制','local','好的，轉到新聞台了。'],['蒼月','把床頭燈關掉','關燈','local','床頭燈關掉了。'],
+  ['翠葉','我吃藥了沒','服藥紀錄','local','早上的藥八點吃過了。'],['赤火','電鍋好了沒','設備狀態','local','電鍋已經跳起來了。'],
+  ['翠葉','打電話給女兒','聯絡家屬','local','好的，正在通知女兒。'],['翠葉','今天有什麼新聞','開放問答','cloud','今天天氣晴，氣溫比昨天低兩度。']
+];
+function seedVoice(){
+  const V=[];
+  for(let d=6;d>=0;d--){const r=rng(500+d), n=8+Math.floor(r()*8);
+    for(let i=0;i<n;i++){const p=PHRASES[Math.floor(r()*PHRASES.length)], ts=at(d,7+Math.floor(r()*14),Math.floor(r()*60));
+      if(ts<=Date.now()) V.push({id:uid(),ts,node:p[0],text:p[1],intent:p[2],route:p[3],reply:p[4],ms:p[3]==='local'?280+Math.floor(r()*420):1100+Math.floor(r()*1500)});}}
+  return V.sort((a,b)=>b.ts-a.ts);
+}
+function seedAll(){return{v:1,home:'示範家庭・阿嬤的家',elder:{name:'阿嬤',age:78,note:'高血壓；夜間偶爾頻尿'},mode:'在家',
+  devices:seedDevices(),events:seedEvents(),reminders:seedReminders(),rules:seedRules(),contacts:seedContacts(),notify:seedNotify(),pushes:seedPushes(),voice:seedVoice()}}
+
+/* ================= 狀態與保存 ================= */
+const KEY='shouka-console-v1';
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){S=null}
+if(!S||S.v!==1) S=seedAll();
+let saveT=0;
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},200)}
+
+/* ================= 即時模擬 ================= */
+const sim={tick:0,power:[],env:{},elder:{room:'客廳',since:Date.now()-3*6e4,moveTs:Date.now()-3*6e4},
+  cpu:24,gpu:12,ram:3.4,temp:51,gw:48};
+(function initEnv(){
+  const h=new Date().getHours(), night=h<6||h>=22;
+  sim.elder.room=night?'臥室':(h<8?'廚房':'客廳');
+  ROOMS.forEach((r,i)=>sim.env[r.id]={t:25.4+i*.3,h:58+i*1.5,pm:r.id==='客廳'||r.id==='臥室'?11+i:null});
+  for(let i=0;i<40;i++) sim.power.push(powerNow()+Math.round((R()-.5)*20));
+})();
+const dev=(room,type)=>S.devices.find(d=>d.room===room&&d.type===type);
+function powerNow(){return 85+S.devices.filter(d=>d.on).reduce((s,d)=>s+(d.type==='light'?Math.round(d.w*d.bri/100):d.w),0)}
+const NEIGH={客廳:['廚房','走廊','臥室','餐廳','玄關'],臥室:['客廳','走廊'],廚房:['客廳','餐廳'],玄關:['客廳'],走廊:['客廳','浴室','臥室'],浴室:['走廊'],餐廳:['客廳','廚房']};
+function step(){
+  sim.tick++;
+  const h=new Date().getHours(), night=h<6||h>=22, e=sim.elder;
+  if(!night && Math.random()<.06){const n=NEIGH[e.room];e.room=n[Math.floor(Math.random()*n.length)];e.since=Date.now();e.moveTs=Date.now();}
+  else if(!night && Math.random()<.3){e.moveTs=Date.now()}
+  ROOMS.forEach(r=>{const v=sim.env[r.id];
+    let target=25.8; if(r.id==='客廳'){const ac=dev('客廳','ac'); if(ac&&ac.on) target=ac.set+.4;}
+    if(r.id==='廚房') target=27.2; if(r.id==='浴室') target=26.4;
+    v.t+= (target-v.t)*.05+(Math.random()-.5)*.08; v.h+=(Math.random()-.5)*.4; v.h=Math.max(45,Math.min(78,v.h));
+    if(v.pm!=null){v.pm+=(Math.random()-.5)*1.2;v.pm=Math.max(4,Math.min(40,v.pm));}
+  });
+  sim.power.push(powerNow()+Math.round((Math.random()-.5)*18)); if(sim.power.length>40) sim.power.shift();
+  sim.cpu=clamp(sim.cpu+(Math.random()-.5)*6,12,48); sim.gpu=clamp(sim.gpu+(Math.random()-.5)*8,4,55);
+  sim.temp=clamp(sim.temp+(Math.random()-.5)*.8,46,58); sim.gw=clamp(sim.gw+(Math.random()-.5)*10,28,90); sim.ram=clamp(sim.ram+(Math.random()-.5)*.1,3.1,4.2);
+  if(sim.tick%20===0 && Math.random()<.5) ambientVoice();
+  updateLive();
+}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function ambientVoice(){
+  const p=PHRASES[Math.floor(Math.random()*PHRASES.length)];
+  S.voice.unshift({id:uid(),ts:Date.now(),node:p[0],text:p[1],intent:p[2],route:p[3],reply:p[4],ms:p[3]==='local'?280+Math.floor(Math.random()*420):1100+Math.floor(Math.random()*1500)});
+  S.voice=S.voice.slice(0,400); save(); if(cur==='logs') render();
+}
+function elderState(){
+  const h=new Date().getHours(), e=sim.elder, idle=Date.now()-e.moveTs;
+  if((h<6||h>=22)&&e.room==='臥室') return '睡眠中';
+  return idle<5*6e4?'活動中':'靜止中';
+}
+
+/* ================= 即時欄位 ================= */
+const LIVE={
+  clock:()=>{const d=new Date();return`${d.getMonth()+1} 月 ${d.getDate()} 日 ${pad(d.getHours())}:${pad(d.getMinutes())}`},
+  hubState:()=>'本地運作中', gw:()=>`已連線・${Math.round(sim.gw)} ms`,
+  elderRoom:()=>sim.elder.room, elderState:()=>elderState(), elderAgo:()=>ago(sim.elder.moveTs),
+  power:()=>sim.power[sim.power.length-1].toLocaleString(), cpu:()=>Math.round(sim.cpu)+'%', gpu:()=>Math.round(sim.gpu)+'%',
+  temp:()=>sim.temp.toFixed(1)+'°C', ram:()=>sim.ram.toFixed(1)+' / 8 GB', gwms:()=>Math.round(sim.gw)+' ms'
+};
+ROOMS.forEach(r=>{LIVE['t-'+r.id]=()=>sim.env[r.id].t.toFixed(1)+'°'; LIVE['h-'+r.id]=()=>Math.round(sim.env[r.id].h)+'%'; LIVE['pm-'+r.id]=()=>sim.env[r.id].pm==null?'—':String(Math.round(sim.env[r.id].pm)); LIVE['in-'+r.id]=()=>sim.elder.room===r.id?'在此':''});
+const LIVEHTML={spark:()=>sparkline(), elderStone:()=>'', planElder:()=>''};
+function L(k){return`<span data-live="${k}">${LIVE[k]?LIVE[k]():''}</span>`}
+function updateLive(){
+  document.querySelectorAll('[data-live]').forEach(n=>{const f=LIVE[n.dataset.live]; if(f){const v=f(); if(n.textContent!==v) n.textContent=v;}});
+  document.querySelectorAll('[data-livehtml]').forEach(n=>{const f=LIVEHTML[n.dataset.livehtml]; if(f) n.innerHTML=f();});
+  document.querySelectorAll('[data-devval]').forEach(n=>{const d=S.devices.find(x=>x.id===n.dataset.devval); if(d) n.innerHTML=devValue(d);});
+  document.querySelectorAll('.room[data-room]').forEach(n=>{const m=n.querySelector('.em'); if(m) m.textContent=sim.elder.room===n.dataset.room?'長者在此':'';});
+}
+
+/* ================= 事件與通知 ================= */
+function addEvent(o){
+  const ev={id:uid(),ts:Date.now(),note:'',status:'pending',...o}; S.events.unshift(ev);
+  const cfg=S.notify[ev.sev]; const chans=Object.keys(cfg).filter(k=>cfg[k]);
+  if(chans.length && ev.notify!==false){
+    const to=S.contacts.filter(c=>ev.sev==='crit'||c.order<=2).map(c=>c.name).join('、');
+    S.pushes.unshift({id:uid(),ts:Date.now(),to,ch:chans.join('＋'),text:`${ev.type}：${ev.text}`});
+  }
+  save(); return ev;
+}
+function toast(msg,cls=''){const d=document.createElement('div');d.className=cls;d.textContent=msg;$('#toast').appendChild(d);setTimeout(()=>d.remove(),5200)}
+const SIMS={
+  gas:{label:'廚房瓦斯異常',sev:'crit',run(){const g=dev('廚房','gas');g.alarm=true;
+    addEvent({sev:'crit',type:'瓦斯異常',room:'廚房',who:'赤火',text:'瓦斯濃度超過警戒值。全屋已語音警示「請關閉爐火、打開窗戶」，並通知所有聯絡人。'});
+    bumpRule('瓦斯／煙霧警示'); toast('警示：廚房瓦斯濃度異常，已通知所有聯絡人','crit')}},
+  still:{label:'長時間未活動',sev:'warn',run(){
+    addEvent({sev:'warn',type:'久未活動',room:sim.elder.room,who:stoneOf(sim.elder.room),text:`${sim.elder.room}超過 3 小時未偵測到活動，語音詢問兩次無回應，已通知家屬。`});
+    bumpRule('久未活動關心'); toast('注意：長者長時間未活動')}},
+  heater:{label:'電暖器未關',sev:'warn',run(){const p=dev('客廳','plug');p.on=true;
+    addEvent({sev:'warn',type:'電器未關',room:'客廳',who:'翠葉',text:'客廳無人超過 30 分鐘，電暖器插座耗電 1,200 W。已語音詢問，等待回應中。'});
+    bumpRule('電器未關'); toast('注意：客廳電暖器未關')}},
+  door:{label:'大門未關',sev:'warn',run(){const d=dev('玄關','door');d.open=true;
+    addEvent({sev:'warn',type:'大門未關',room:'玄關',who:'白日',text:'大門開啟超過 10 分鐘，已語音提醒。'});
+    bumpRule('大門未關'); toast('注意：大門開啟超過 10 分鐘')}}
+};
+function bumpRule(name){const r=S.rules.find(x=>x.name===name); if(r){r.count++; r.last=Date.now();}}
+const stoneOf=room=>(ROOMS.find(r=>r.id===room)||{}).stone||'主神';
+function resolveSide(ev){
+  if(ev.type==='瓦斯異常'){const g=dev('廚房','gas'); if(g) g.alarm=false;}
+  if(ev.type==='大門未關'){const d=dev('玄關','door'); if(d) d.open=false;}
+  if(ev.type==='電器未關'){const p=dev('客廳','plug'); if(p) p.on=false;}
+}
+const pending=()=>S.events.filter(e=>e.status==='pending');
+
+/* ================= 導覽 ================= */
+const VIEWS=[['overview','總','總覽'],['devices','器','設備'],['events','事','事件'],['reminders','時','提醒'],['rules','規','規則'],['logs','錄','紀錄'],['family','家','家屬'],['system','系','系統']];
+let cur='overview';
+try{const h=location.hash.slice(1); if(VIEWS.some(v=>v[0]===h)) cur=h;}catch(e){}
+const ui={evFilter:{sev:'all',status:'all',room:'all'},evOpen:null,devRoom:'all',devKind:'all',menu:false,addRem:false,addRule:false,addContact:false};
+function renderNav(){
+  const n=pending().length;
+  $('#nav').innerHTML=VIEWS.map(([id,g,l])=>`<button data-act="go" data-v="${id}" ${cur===id?'aria-current="page"':''}><span class="g">${g}</span><span class="l">${l}</span>${id==='events'&&n?`<span class="badge">${n}</span>`:'<span></span>'}</button>`).join('');
+  $('#foot-dot').className='dot'+(pending().some(e=>e.sev==='crit')?' crit':'');
+}
+function topbar(){
+  const p=pending(), crit=p.some(e=>e.sev==='crit');
+  const cls=crit?'alert':p.length?'warn':'';
+  const txt=crit?'警示中・請立即確認':p.length?`守護中・${p.length} 件待處理`:'守護中・一切平安';
+  return`<div class="topbar">
+    <div class="status ${cls}" role="status"><span class="dot ${crit?'crit':p.length?'warn':''}"></span><span class="big">${txt}</span></div>
+    ${p.length?`<button class="btn sm" data-act="go" data-v="events">查看事件</button>`:''}
+    <span class="clock num">${L('clock')}</span>
+    <div class="pop"><button class="btn" data-act="menu" aria-expanded="${ui.menu}">模擬事件 ▾</button>
+      ${ui.menu?`<div class="pop-menu">${Object.entries(SIMS).map(([k,s])=>`<button data-act="sim" data-k="${k}">${s.label}<span class="sev ${s.sev}">${SEV[s.sev]}</span></button>`).join('')}</div>`:''}
+    </div>
+  </div>`;
+}
+function render(){
+  renderNav();
+  $('#main').innerHTML=topbar()+V[cur]()+`<p class="sim-note">此控制台為原型展示，設備數值、事件與統計皆由瀏覽器模擬產生；你所做的設定只保存在這台裝置的瀏覽器中。</p>`;
+  bindRanges();
+}
+
+/* ================= 共用片段 ================= */
+const sevTag=s=>`<span class="sev ${s}">${SEV[s]}</span>`;
+const whoTag=w=>`<span class="who" style="--dotc:var(${STONE[w]||'--stone-dark'})"><i></i>${esc(w)}</span>`;
+function devValue(d){
+  const env=sim.env[d.room];
+  switch(d.type){
+    case 'th': return `<span class="num">${env.t.toFixed(1)}°C・${Math.round(env.h)}%</span>`;
+    case 'air': return `PM2.5 <span class="num">${Math.round(env.pm??10)}</span> μg/m³`;
+    case 'motion': return sim.elder.room===d.room?'<b>有人</b>':'無人';
+    case 'radar': return sim.elder.room===d.room?`<b>有人・${elderState()}</b>`:'無人';
+    case 'gas': return d.alarm?'<b style="color:var(--bengara)">濃度異常</b>':'正常';
+    case 'smoke': return '正常';
+    case 'door': return d.open?'<b style="color:var(--ochre)">開啟</b>':'關閉';
+    case 'voice': return '待命中';
+    case 'hub': return `運作中・CPU ${Math.round(sim.cpu)}%`;
+    case 'zhub': return `${S.devices.filter(x=>x.kind==='sensor'||x.kind==='control').length} 台已連線`;
+    case 'light': return d.on?`開・${d.bri}%`:'關';
+    case 'ac': return d.on?`開・設定 ${d.set}°C`:'關';
+    case 'plug': return d.on?`開・<span class="num">${d.w.toLocaleString()}</span> W`:'關・0 W';
+    default: return d.on?'開':'關';
+  }
+}
+function devControl(d){
+  const sw=`<button class="sw" role="switch" aria-checked="${!!d.on}" aria-label="${esc(d.room+d.name)}" data-act="toggle" data-id="${d.id}"></button>`;
+  if(d.type==='light') return `<input type="range" min="5" max="100" step="5" value="${d.bri}" aria-label="亮度" data-range="${d.id}">${sw}`;
+  if(d.type==='ac') return `<button class="btn sm" data-act="ac" data-id="${d.id}" data-d="-1" aria-label="降溫">−</button><span class="num">${d.set}°</span><button class="btn sm" data-act="ac" data-id="${d.id}" data-d="1" aria-label="升溫">＋</button>${sw}`;
+  if(['plug','tv','relay'].includes(d.type)) return sw;
+  if(d.type==='gas'&&d.alarm) return `<button class="btn sm danger" data-act="go" data-v="events">處理警示</button>`;
+  if(d.type==='door'&&d.open) return `<span class="faint">等待關門</span>`;
+  return '';
+}
+function sparkline(){
+  const w=320,h=70,p=sim.power,max=Math.max(...p)*1.15,min=0;
+  const x=i=>i/(p.length-1)*w, y=v=>h-(v-min)/(max-min)*h;
+  const d=p.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join('');
+  const last=p[p.length-1];
+  return `<svg class="chart" viewBox="0 0 ${w} ${h+4}" role="img" aria-label="近兩分鐘用電，目前 ${last} 瓦">
+    <path d="${d} L${w},${h} L0,${h}Z" fill="var(--s-local)" opacity=".12"></path>
+    <path d="${d}" fill="none" stroke="var(--s-local)" stroke-width="2" stroke-linejoin="round"></path>
+    <circle cx="${x(p.length-1)}" cy="${y(last)}" r="4" fill="var(--s-local)" stroke="var(--card)" stroke-width="2"></circle></svg>`;
+}
+
+/* ================= 各頁面 ================= */
+const V={};
+V.overview=()=>{
+  const p=pending();
+  const todayEv=S.events.filter(e=>dayKey(e.ts)===dayKey(Date.now()));
+  const nowHM=hm(Date.now());
+  const meds=S.reminders.filter(r=>r.kind==='服藥'&&r.on), medsDone=meds.filter(r=>r.time<=nowHM).length;
+  const nightVisits=todayEv.filter(e=>e.type==='夜間如廁').length;
+  const room=sim.elder.room, sc=STONE[stoneOf(room)];
+  return `<div class="phead"><div><h1>總覽</h1><p>${esc(S.home)}・${S.mode}模式</p></div>
+    <div class="seg" role="group" aria-label="居家模式">${['在家','外出','就寢'].map(m=>`<button data-act="mode" data-m="${m}" aria-pressed="${S.mode===m}">${m}</button>`).join('')}</div></div>
+  <div class="grid g-over">
+    <div class="card span-5">
+      <h2>${esc(S.elder.name)}的動態 <small>毫米波雷達＋人體感測</small></h2>
+      <div class="elder"><div class="stone" style="--sc:var(${sc})"></div>
+        <div><div class="where">${L('elderRoom')}</div><div class="muted">${L('elderState')}・最後活動 ${L('elderAgo')}</div></div></div>
+      <div class="tiles">
+        <div><b class="num">${nightVisits}</b><span>昨夜如廁次數</span></div>
+        <div><b class="num">${medsDone} / ${meds.length}</b><span>今日服藥提醒</span></div>
+        <div><b class="num">${todayEv.length}</b><span>今日事件</span></div>
+      </div>
+    </div>
+    <div class="card span-7">
+      <h2>待處理 <small>${p.length?p.length+' 件':'沒有待處理事件'}</small></h2>
+      ${p.length?`<div class="list">${p.slice(0,4).map(e=>`<div><span class="t num">${hm(e.ts)}</span>
+        <div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${sevTag(e.sev)}<b>${esc(e.type)}</b>${whoTag(e.who)}<span class="faint">${esc(e.room)}</span></div><div class="muted" style="font-size:13px;margin-top:2px">${esc(e.text)}</div></div>
+        <button class="btn sm" data-act="openev" data-id="${e.id}">處理</button></div>`).join('')}</div>`:`<div class="empty">一切平安。新的異常會出現在這裡，並依設定通知家屬。</div>`}
+    </div>
+    <div class="card span-7">
+      <h2>房間環境 <small>每 3 秒更新</small></h2>
+      <div class="tablewrap"><table><thead><tr><th>房間</th><th>式守</th><th>溫度</th><th>濕度</th><th>PM2.5</th><th>長者</th></tr></thead><tbody>
+      ${ROOMS.filter(r=>r.stone).map(r=>`<tr><td>${r.id}</td><td>${whoTag(r.stone)}</td><td class="num">${L('t-'+r.id)}</td><td class="num">${L('h-'+r.id)}</td><td class="num">${L('pm-'+r.id)}</td><td><span class="em2" data-live="in-${r.id}">${sim.elder.room===r.id?'在此':''}</span></td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+    <div class="card span-5">
+      <h2>即時用電 <small>全屋・瓦</small></h2>
+      <div style="display:flex;align-items:baseline;gap:6px"><b class="num" style="font-size:30px;font-weight:500">${L('power')}</b><span class="muted">W</span></div>
+      <div data-livehtml="spark">${sparkline()}</div>
+      <p class="faint" style="font-size:12px;margin-top:4px">近 2 分鐘。開啟中的設備：${S.devices.filter(d=>d.on).map(d=>esc(d.name.replace(/（.+）/,''))).join('、')||'無'}</p>
+    </div>
+    <div class="card span-7">
+      <h2>今日時間軸 <small>${todayEv.length} 件</small></h2>
+      ${todayEv.length?`<div class="list">${todayEv.slice(0,8).map(e=>`<div><span class="t num">${hm(e.ts)}</span><div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-weight:500">${esc(e.type)}</b>${whoTag(e.who)}</div><div class="muted" style="font-size:13px">${esc(e.text)}</div></div><span class="st ${e.status}">${STATUS[e.status]}</span></div>`).join('')}</div>`:`<div class="empty">今天還沒有事件。</div>`}
+    </div>
+    <div class="card span-5">
+      <h2>快速操作</h2>
+      <div class="chips" style="gap:8px;margin-bottom:16px">
+        <button class="btn" data-act="quick" data-q="alloff">全屋關燈</button>
+        <button class="btn" data-act="quick" data-q="path">打開走道燈</button>
+        <button class="btn" data-act="quick" data-q="weather">播報天氣</button>
+      </div>
+      <form id="say-form" style="display:grid;gap:8px">
+        <label class="f" for="say-text">對${esc(S.elder.name)}說話（由所在房間的式守播放）</label>
+        <div style="display:flex;gap:8px"><input type="text" id="say-text" placeholder="例如：阿嬤，我晚上七點到家" style="flex:1"><button class="btn primary" type="submit">播放</button></div>
+      </form>
+    </div>
+  </div>`;
+};
+
+V.devices=()=>{
+  const kinds=[['all','全部'],['sensor','感測'],['control','控制'],['voice','語音'],['low','低電量']];
+  let list=S.devices.filter(d=>ui.devRoom==='all'||d.room===ui.devRoom);
+  if(ui.devKind==='low') list=list.filter(d=>d.batt!=null&&d.batt<20); else if(ui.devKind!=='all') list=list.filter(d=>d.kind===ui.devKind);
+  const rooms=[...new Set(list.map(d=>d.room))];
+  const low=S.devices.filter(d=>d.batt!=null&&d.batt<20).length;
+  return `<div class="phead"><div><h1>設備</h1><p>${S.devices.length} 台設備・${S.devices.filter(d=>d.on).length} 台開啟中・${low} 台低電量</p></div>
+    <div class="chips">${kinds.map(([k,l])=>`<button class="chip" data-act="devkind" data-k="${k}" aria-pressed="${ui.devKind===k}">${l}</button>`).join('')}</div></div>
+  <div class="dev-grid">
+    <div class="card"><h2>平面圖 <small>點房間篩選</small></h2>
+      <div class="plan">${ROOMS.map(r=>{const alarm=S.devices.some(d=>d.room===r.id&&(d.alarm||d.open));return`<button class="room ${alarm?'alarm':''}" data-room="${r.id}" data-act="devroom" data-r="${r.id}" aria-pressed="${ui.devRoom===r.id}" style="grid-area:${r.grid}">
+        <span class="rn">${r.id}</span><span class="rs">${r.stone?whoTag(r.stone):''}<span class="em elder-mark">${sim.elder.room===r.id?'長者在此':''}</span></span></button>`}).join('')}</div>
+      <button class="btn sm" style="margin-top:10px" data-act="devroom" data-r="all" ${ui.devRoom==='all'?'disabled':''}>顯示全部房間</button>
+    </div>
+    <div>${rooms.length?rooms.map(room=>`<div class="rgroup"><h3>${room}${stoneOf(room)&&ROOMS.find(r=>r.id===room).stone?whoTag(stoneOf(room)):''}</h3>
+      ${list.filter(d=>d.room===room).map(d=>`<div class="dev ${d.alarm?'alarm':''}">
+        <div><div class="dn">${esc(d.name)}</div><div class="dt">${d.model?esc(d.model):{sensor:'Zigbee 感測器',control:'控制設備',voice:'語音節點',hub:'中樞'}[d.kind]}</div></div>
+        <div class="dv" data-devval="${d.id}">${devValue(d)}</div>
+        <div class="meta">${d.batt!=null?`<span class="batt ${d.batt<20?'low':''}">電量 ${d.batt}%</span>`:'<span>插電</span>'}${d.lqi?`<span>訊號 ${d.lqi}</span>`:''}</div>
+        <div class="ctl">${devControl(d)}</div></div>`).join('')}</div>`).join(''):`<div class="empty">沒有符合條件的設備。</div>`}</div>
+  </div>`;
+};
+
+V.events=()=>{
+  const f=ui.evFilter;
+  const list=S.events.filter(e=>(f.sev==='all'||e.sev===f.sev)&&(f.status==='all'||e.status===f.status)&&(f.room==='all'||e.room===f.room));
+  const sel=(k,opts)=>`<select data-evf="${k}" aria-label="${k}">${opts.map(([v,l])=>`<option value="${v}" ${f[k]===v?'selected':''}>${l}</option>`).join('')}</select>`;
+  return `<div class="phead"><div><h1>事件</h1><p>共 ${S.events.length} 筆・${pending().length} 件待處理</p></div>
+    <div class="chips" style="gap:8px">${sel('sev',[['all','全部等級'],['crit','警示'],['warn','注意'],['info','資訊']])}${sel('status',[['all','全部狀態'],['pending','待處理'],['auto','自動處理'],['done','已處理']])}${sel('room',[['all','全部房間'],...ROOMS.map(r=>[r.id,r.id])])}</div></div>
+  <div class="card"><div class="tablewrap"><table><thead><tr><th>時間</th><th>等級</th><th>類型</th><th>式守・房間</th><th>內容</th><th>狀態</th></tr></thead><tbody>
+  ${list.length?list.slice(0,80).map(e=>`<tr class="row" data-act="evrow" data-id="${e.id}" tabindex="0" aria-expanded="${ui.evOpen===e.id}"><td class="num" style="white-space:nowrap">${dayLabel(e.ts)} ${hm(e.ts)}</td><td>${sevTag(e.sev)}</td><td style="white-space:nowrap">${esc(e.type)}</td><td style="white-space:nowrap">${whoTag(e.who)} <span class="faint">${esc(e.room)}</span></td><td style="min-width:240px">${esc(e.text)}</td><td><span class="st ${e.status}">${STATUS[e.status]}</span></td></tr>
+    ${ui.evOpen===e.id?`<tr class="detail"><td colspan="6"><div class="ev-detail">
+      <div class="kv"><dt>發生時間</dt><dd>${new Date(e.ts).toLocaleString('zh-TW',{hour12:false})}</dd><dt>來源</dt><dd>${esc(e.who)}（${esc(e.room)}）</dd><dt>狀態</dt><dd>${STATUS[e.status]}${e.handledAt?`・${dayLabel(e.handledAt)} ${hm(e.handledAt)}`:''}</dd>${e.note?`<dt>處理紀錄</dt><dd>${esc(e.note)}</dd>`:''}</div>
+      ${e.status==='pending'?`<form data-evform="${e.id}" style="display:grid;gap:8px"><label class="f" for="note-${e.id}">處理紀錄<textarea id="note-${e.id}" placeholder="例如：已致電確認，阿嬤已關閉爐火並開窗"></textarea></label><div style="display:flex;gap:8px"><button class="btn primary" type="submit">標記為已處理</button></div></form>`:`<div class="muted" style="font-size:13px">${e.status==='auto'?'此事件已由情境規則自動處理，無需人工介入。':'此事件已處理完成。'}</div>`}
+    </div></td></tr>`:''}`).join(''):`<tr><td colspan="6"><div class="empty">沒有符合條件的事件。</div></td></tr>`}
+  </tbody></table></div></div>`;
+};
+
+function adherence(rem){
+  const r=rng(rem.label.length*131+rem.time.charCodeAt(1)), out=[];
+  for(let d=6;d>=0;d--){const ts=at(d,+rem.time.slice(0,2),+rem.time.slice(3));
+    if(ts>Date.now()) out.push(['up','—']); else {const x=r(); out.push(x<.82?['ok','✓']:x<.95?['late','遲']:['miss','✕']);}}
+  return out;
+}
+V.reminders=()=>{
+  const sorted=[...S.reminders].sort((a,b)=>a.time.localeCompare(b.time));
+  const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return '日一二三四五六'[d.getDay()]});
+  return `<div class="phead"><div><h1>提醒</h1><p>由長者所在房間的式守以語音播報；長者回覆後自動記錄。</p></div>
+    <button class="btn primary" data-act="addrem">${ui.addRem?'取消新增':'新增提醒'}</button></div>
+  ${ui.addRem?`<form class="add" id="rem-form">
+    <label class="f" for="rem-time">時間<input type="time" id="rem-time" value="09:00" required></label>
+    <label class="f" for="rem-label">內容<input type="text" id="rem-label" placeholder="例如：量血壓" required></label>
+    <label class="f" for="rem-kind">類型<select id="rem-kind"><option>服藥</option><option>作息</option><option>天氣</option></select></label>
+    <label class="f" for="rem-days">重複<select id="rem-days"><option>每天</option><option>平日</option><option>週末</option><option>每週三</option></select></label>
+    <button class="btn primary" type="submit">儲存</button></form>`:''}
+  <div class="card" style="margin-top:12px"><div class="tablewrap"><table><thead><tr><th>時間</th><th>內容</th><th>類型</th><th>重複</th><th>播報位置</th><th>近 7 天（${days.join(' ')}）</th><th>啟用</th><th></th></tr></thead><tbody>
+  ${sorted.map(r=>`<tr><td class="num"><b style="font-weight:500">${esc(r.time)}</b></td><td>${esc(r.label)}</td><td>${esc(r.kind)}</td><td>${esc(r.days)}</td><td class="muted">${esc(r.node)}</td>
+    <td>${r.kind==='服藥'?`<div class="adh">${adherence(r).map(([c,t])=>`<span class="${c}" title="${{ok:'準時',late:'延遲回覆',miss:'未回應',up:'尚未到'}[c]}">${t}</span>`).join('')}</div>`:'<span class="faint">不需回覆</span>'}</td>
+    <td><button class="sw" role="switch" aria-checked="${r.on}" aria-label="啟用 ${esc(r.label)}" data-act="remtoggle" data-id="${r.id}"></button></td>
+    <td><button class="btn sm" data-act="remdel" data-id="${r.id}">刪除</button></td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="legend" style="margin-top:12px"><span><i style="background:var(--moss)"></i>準時</span><span><i style="background:color-mix(in srgb,var(--ochre) 30%,transparent);border:1px solid var(--ochre)"></i>延遲回覆</span><span><i style="border:1px solid var(--bengara)"></i>未回應</span></div></div>`;
+};
+
+V.rules=()=>`<div class="phead"><div><h1>情境規則</h1><p>由主神在本地判斷執行；網路中斷時照常運作。</p></div>
+    <button class="btn primary" data-act="addrule">${ui.addRule?'取消新增':'新增規則'}</button></div>
+  ${ui.addRule?`<form class="add" id="rule-form" style="margin-bottom:14px">
+    <label class="f" for="ru-name">名稱<input type="text" id="ru-name" placeholder="例如：浴室久留關心" required></label>
+    <label class="f" for="ru-when">當<select id="ru-when"><option>浴室人體感測持續有人超過 40 分鐘</option><option>臥室毫米波雷達偵測到下床</option><option>客廳 PM2.5 高於 35</option><option>室溫低於 16°C</option><option>大門於夜間開啟</option></select></label>
+    <label class="f" for="ru-if">若<select id="ru-if"><option>無條件</option><option>時間在 22:00–06:00</option><option>長者在家</option><option>外出模式</option></select></label>
+    <label class="f" for="ru-then">則<select id="ru-then"><option>就近式守語音詢問；無回應通知家屬</option><option>開啟走道燈</option><option>語音提醒開窗或開清淨機</option><option>通知所有聯絡人</option></select></label>
+    <button class="btn primary" type="submit">儲存</button></form>`:''}
+  ${S.rules.map(r=>`<div class="rule ${r.on?'':'off'}"><div>
+    <h3>${esc(r.name)}${r.locked?'<span class="lock">安全規則・不可停用</span>':''}</h3>
+    <div class="clause"><b>當</b><span>${esc(r.when)}</span><b>若</b><span>${esc(r.if)}</span><b>則</b><span>${esc(r.then)}</span></div>
+    <div class="rmeta num">近 7 天觸發 ${r.count} 次${r.last?`・最近一次 ${dayLabel(r.last)} ${hm(r.last)}`:'・尚未觸發'}</div></div>
+    <div style="display:grid;gap:8px;justify-items:end;align-content:start"><button class="sw" role="switch" aria-checked="${r.on}" aria-label="啟用 ${esc(r.name)}" data-act="ruletoggle" data-id="${r.id}" ${r.locked?'disabled':''}></button>
+    ${r.locked?'':`<button class="btn sm" data-act="ruledel" data-id="${r.id}">刪除</button>`}</div></div>`).join('')}`;
+
+function weekData(){
+  const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);d.setHours(0,0,0,0);return d.getTime()});
+  const voice=days.map(k=>{const v=S.voice.filter(x=>dayKey(x.ts)===k);return{k,local:v.filter(x=>x.route==='local').length,cloud:v.filter(x=>x.route==='cloud').length}});
+  const night=days.map(k=>({k,n:S.events.filter(e=>e.type==='夜間如廁'&&dayKey(e.ts)===k).length}));
+  const heat=days.map((k,di)=>{const r=rng(k/864e5|0);return[...Array(24)].map((_,h)=>{
+    if(k===dayKey(Date.now())&&h>new Date().getHours()) return null;
+    const base=h<6?.04:h<7?.35:h<9?.8:h<12?.55:h<14?.65:h<15?.25:h<18?.6:h<21?.7:h<22?.4:.1; return Math.max(0,Math.min(1,base+(r()-.5)*.3))})});
+  return{days,voice,night,heat};
+}
+const dLab=k=>{const d=new Date(k);return`${d.getMonth()+1}/${d.getDate()}`};
+function barChart(data,key,label){
+  const w=420,h=170,pl=28,pb=22,pt=10,max=Math.max(3,...data.map(d=>d[key])),bw=(w-pl)/data.length;
+  const y=v=>pt+(h-pt-pb)*(1-v/max);
+  const ticks=[0,Math.ceil(max/2),max];
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">
+    ${ticks.map(t=>`<line class="grid-l" x1="${pl}" x2="${w}" y1="${y(t)}" y2="${y(t)}"></line><text x="${pl-6}" y="${y(t)+4}" text-anchor="end">${t}</text>`).join('')}
+    ${data.map((d,i)=>{const bh=(h-pt-pb)-(y(d[key])-pt), x=pl+i*bw+bw*.28; return `<g data-tip="${dLab(d.k)}　${label} ${d[key]} 次"><rect x="${pl+i*bw}" y="${pt}" width="${bw}" height="${h-pt-pb}" fill="transparent"></rect>${d[key]?`<path d="M${x},${h-pb} V${y(d[key])+4} q0,-4 4,-4 h${bw*.44-8} q4,0 4,4 V${h-pb}Z" fill="var(--s-local)"></path>`:''}</g><text x="${pl+i*bw+bw/2}" y="${h-6}" text-anchor="middle">${dLab(d.k)}</text>`}).join('')}
+    <line class="axis" x1="${pl}" x2="${w}" y1="${h-pb}" y2="${h-pb}"></line></svg>`;
+}
+function stackChart(data){
+  const w=420,h=190,pl=28,pb=22,pt=10,max=Math.max(5,...data.map(d=>d.local+d.cloud)),bw=(w-pl)/data.length;
+  const sc=v=>(h-pt-pb)*v/max, ticks=[0,Math.round(max/2),max];
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="每日語音互動，本地與雲端">
+    ${ticks.map(t=>`<line class="grid-l" x1="${pl}" x2="${w}" y1="${h-pb-sc(t)}" y2="${h-pb-sc(t)}"></line><text x="${pl-6}" y="${h-pb-sc(t)+4}" text-anchor="end">${t}</text>`).join('')}
+    ${data.map((d,i)=>{const x=pl+i*bw+bw*.28, bwi=bw*.44, hl=sc(d.local), hc=sc(d.cloud);
+      return `<g data-tip="${dLab(d.k)}\n本地 ${d.local} 次\n雲端 ${d.cloud} 次"><rect x="${pl+i*bw}" y="${pt}" width="${bw}" height="${h-pt-pb}" fill="transparent"></rect>
+      ${hl?`<rect x="${x}" y="${h-pb-hl}" width="${bwi}" height="${hl}" fill="var(--s-local)"></rect>`:''}
+      ${hc?`<path d="M${x},${h-pb-hl-2} V${h-pb-hl-hc+4} q0,-4 4,-4 h${bwi-8} q4,0 4,4 V${h-pb-hl-2}Z" fill="var(--s-cloud)"></path>`:''}</g>
+      <text x="${pl+i*bw+bw/2}" y="${h-6}" text-anchor="middle">${dLab(d.k)}</text>`}).join('')}
+    <line class="axis" x1="${pl}" x2="${w}" y1="${h-pb}" y2="${h-pb}"></line></svg>`;
+}
+function heatChart(days,heat){
+  const w=640,cw=(w-44)/24,ch=18,h=7*(ch+3)+22;
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="近 7 天每小時活動熱度">
+    ${days.map((k,di)=>`<text x="38" y="${di*(ch+3)+ch-4}" text-anchor="end">${dLab(k)}</text>`+heat[di].map((v,hh)=>v==null?'':`<rect x="${44+hh*cw}" y="${di*(ch+3)}" width="${cw-2}" height="${ch}" rx="2" fill="color-mix(in srgb,var(--heat) ${Math.round(8+v*88)}%,var(--card))" data-tip="${dLab(k)} ${pad(hh)}:00\n活動度 ${Math.round(v*100)}"></rect>`).join('')).join('')}
+    ${[0,6,12,18,23].map(hh=>`<text x="${44+hh*cw+cw/2}" y="${h-4}" text-anchor="middle">${pad(hh)}</text>`).join('')}</svg>`;
+}
+V.logs=()=>{
+  const {days,voice,night,heat}=weekData();
+  const tl=voice.reduce((s,d)=>s+d.local,0), tc=voice.reduce((s,d)=>s+d.cloud,0);
+  const v7=S.voice.filter(v=>v.ts>=days[0]); const avgMs=v7.length?Math.round(v7.reduce((s,v)=>s+v.ms,0)/v7.length):0;
+  const nAvg=(night.reduce((s,d)=>s+d.n,0)/7).toFixed(1);
+  return `<div class="phead"><div><h1>生活紀錄</h1><p>近 7 天（${dLab(days[0])}–${dLab(days[6])}）</p></div></div>
+  <div class="stats" style="margin-bottom:16px">
+    <div><b class="num">${nAvg}</b><span>平均每晚如廁次數</span></div>
+    <div><b class="num">${tl+tc}</b><span>語音互動次數</span></div>
+    <div><b class="num">${tl+tc?Math.round(tl/(tl+tc)*100):0}%</b><span>在家中本地處理</span></div>
+    <div><b class="num">${(avgMs/1000).toFixed(2)} s</b><span>平均語音回應時間</span></div>
+  </div>
+  <div class="grid g-over">
+    <div class="card span-12"><h2>活動熱度 <small>顏色越深代表該小時活動越多</small></h2><div class="tablewrap">${heatChart(days,heat)}</div></div>
+    <div class="card span-6"><h2>夜間如廁次數</h2>${barChart(night,'n','夜間如廁')}
+      <details class="tv"><summary>以表格檢視</summary><table><tr><th>日期</th><th>次數</th></tr>${night.map(d=>`<tr><td>${dLab(d.k)}</td><td class="num">${d.n}</td></tr>`).join('')}</table></details></div>
+    <div class="card span-6"><h2>語音互動 <span class="legend"><span><i style="background:var(--s-local)"></i>本地 ${tl}</span><span><i style="background:var(--s-cloud)"></i>雲端 ${tc}</span></span></h2>${stackChart(voice)}
+      <details class="tv"><summary>以表格檢視</summary><table><tr><th>日期</th><th>本地</th><th>雲端</th></tr>${voice.map(d=>`<tr><td>${dLab(d.k)}</td><td class="num">${d.local}</td><td class="num">${d.cloud}</td></tr>`).join('')}</table></details></div>
+    <div class="card span-12"><h2>語音紀錄 <small>最近 30 筆</small></h2><div class="tablewrap"><table><thead><tr><th>時間</th><th>式守</th><th>長者說</th><th>判斷意圖</th><th>處理</th><th>回應</th><th>耗時</th></tr></thead><tbody>
+      ${S.voice.slice(0,30).map(v=>`<tr><td class="num" style="white-space:nowrap">${dayLabel(v.ts)} ${hm(v.ts)}</td><td>${whoTag(v.node)}</td><td>「${esc(v.text)}」</td><td class="muted">${esc(v.intent)}</td><td><span class="sev" style="color:var(${v.route==='local'?'--s-local':'--s-cloud'});border-color:currentColor">${v.route==='local'?'本地':'雲端'}</span></td><td class="muted">${esc(v.reply)}</td><td class="num">${v.ms} ms</td></tr>`).join('')}
+    </tbody></table></div></div>
+  </div>`;
+};
+
+V.family=()=>{
+  const n=S.notify, ch=['App','簡訊','電話'];
+  return `<div class="phead"><div><h1>家屬與通知</h1><p>異常事件依等級通知；警示一律通知所有聯絡人。</p></div></div>
+  <div class="grid g-over">
+    <div class="card span-5"><h2>長者資料</h2>
+      <form id="elder-form" style="display:grid;gap:10px">
+        <label class="f" for="el-name">稱呼<input type="text" id="el-name" value="${esc(S.elder.name)}"></label>
+        <label class="f" for="el-age">年齡<input type="number" id="el-age" value="${esc(S.elder.age)}" min="50" max="120"></label>
+        <label class="f" for="el-note">健康備註<textarea id="el-note">${esc(S.elder.note)}</textarea></label>
+        <div><button class="btn primary" type="submit">儲存</button></div></form></div>
+    <div class="card span-7"><h2>通知方式 <small>勾選各等級要使用的管道</small></h2>
+      <div class="tablewrap"><table><thead><tr><th>等級</th>${ch.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>
+      ${['crit','warn','info'].map(s=>`<tr><td>${sevTag(s)}</td>${ch.map(c=>`<td><input type="checkbox" id="nt-${s}-${c}" data-nt="${s}" data-c="${c}" ${n[s][c]?'checked':''} ${s==='crit'&&c==='App'?'disabled':''} aria-label="${SEV[s]} ${c}"></td>`).join('')}</tr>`).join('')}
+      </tbody></table></div>
+      <label style="display:flex;gap:10px;align-items:center;margin-top:12px;font-size:13.5px"><button class="sw" role="switch" aria-checked="${n.quiet}" data-act="quiet" aria-label="夜間勿擾"></button>夜間勿擾：22:00–07:00 只發送「警示」</label></div>
+    <div class="card span-7"><h2>聯絡人 <small>依順序通知</small></h2>
+      <div class="tablewrap"><table><thead><tr><th>順序</th><th>名稱</th><th>關係</th><th>電話</th><th>管道</th><th></th></tr></thead><tbody>
+      ${[...S.contacts].sort((a,b)=>a.order-b.order).map((c,i,arr)=>`<tr><td class="num">${i+1}</td><td><b style="font-weight:500">${esc(c.name)}</b></td><td class="muted">${esc(c.rel)}</td><td class="num">${esc(c.phone)}</td><td>${c.ch.map(esc).join('、')}</td>
+        <td style="white-space:nowrap"><button class="btn sm" data-act="cup" data-id="${c.id}" ${i===0?'disabled':''} aria-label="上移">↑</button> <button class="btn sm" data-act="cdel" data-id="${c.id}">移除</button></td></tr>`).join('')}
+      </tbody></table></div>
+      ${ui.addContact?`<form class="add" id="contact-form"><label class="f" for="ct-name">名稱<input type="text" id="ct-name" required></label><label class="f" for="ct-rel">關係<input type="text" id="ct-rel" placeholder="例如：孫子"></label><label class="f" for="ct-phone">電話<input type="text" id="ct-phone"></label><button class="btn primary" type="submit">新增</button></form>`:''}
+      <button class="btn" style="margin-top:12px" data-act="addcontact">${ui.addContact?'取消':'新增聯絡人'}</button></div>
+    <div class="card span-5"><h2>通知紀錄 <small>${S.pushes.length} 則</small></h2>
+      ${S.pushes.length?`<div class="list">${S.pushes.slice(0,8).map(p=>`<div><span class="t num">${dayLabel(p.ts)}<br>${hm(p.ts)}</span><div><b style="font-weight:500">${esc(p.to)}</b><div class="muted" style="font-size:13px">${esc(p.text)}</div></div><span class="faint" style="font-size:12px">${esc(p.ch)}</span></div>`).join('')}</div>`:`<div class="empty">尚未發送任何通知。</div>`}</div>
+  </div>`;
+};
+
+V.system=()=>{
+  const voiceMonth=S.voice.filter(v=>v.route==='cloud').length;
+  const meter=(pct,warn)=>`<div class="meter ${warn?'warn':''}"><i style="width:${pct}%"></i></div>`;
+  return `<div class="phead"><div><h1>系統</h1><p>主神中央主機與網路狀態</p></div></div>
+  <div class="sys" style="margin-bottom:16px">
+    <div class="card"><h2>CPU</h2><b class="num">${L('cpu')}</b>${meter(sim.cpu)}</div>
+    <div class="card"><h2>GPU 推論</h2><b class="num">${L('gpu')}</b>${meter(sim.gpu)}</div>
+    <div class="card"><h2>記憶體</h2><b class="num">${L('ram')}</b>${meter(sim.ram/8*100)}</div>
+    <div class="card"><h2>主機溫度</h2><b class="num">${L('temp')}</b>${meter((sim.temp-30)/50*100,sim.temp>56)}</div>
+  </div>
+  <div class="grid g-over">
+    <div class="card span-6"><h2>主神</h2><dl class="kv">
+      <dt>硬體</dt><dd>NVIDIA Jetson Orin Nano SUPER 開發套件</dd><dt>儲存</dt><dd class="num">1TB NVMe SSD・已用 212 GB</dd>
+      <dt>顯示</dt><dd>15 吋觸控儀表板</dd><dt>連續運作</dt><dd class="num">23 天 6 小時</dd>
+      <dt>軟體</dt><dd>守家核心 0.9（原型）</dd><dt>本地模型</dt><dd>喚醒詞、語音轉文字、意圖判斷、語音合成</dd></dl></div>
+    <div class="card span-6"><h2>網路與服務</h2><dl class="kv">
+      <dt>Zigbee 網路</dt><dd><span class="dot"></span>Aqara Hub・${S.devices.filter(d=>d.batt!=null||d.type==='gas'||d.type==='air'||d.type==='radar').length} 台感測器在線</dd>
+      <dt>語音節點</dt><dd><span class="dot"></span>${S.devices.filter(d=>d.kind==='voice').length} 台 ATOM Echo・Wi-Fi</dd>
+      <dt>雲端閘道</dt><dd><span class="dot"></span>已連線・延遲 ${L('gwms')}</dd>
+      <dt>雲端語言模型</dt><dd>近 7 天呼叫 <span class="num">${voiceMonth}</span> 次</dd>
+      <dt>斷網保護</dt><dd>照明、警示與提醒於本地持續運作</dd></dl></div>
+    <div class="card span-6"><h2>電池</h2><div class="tablewrap"><table><thead><tr><th>設備</th><th>房間</th><th>電量</th></tr></thead><tbody>
+      ${S.devices.filter(d=>d.batt!=null).sort((a,b)=>a.batt-b.batt).map(d=>`<tr><td>${esc(d.name)}</td><td class="muted">${esc(d.room)}</td><td style="min-width:120px"><span class="num batt ${d.batt<20?'low':''}">${d.batt}%</span>${meter(d.batt,d.batt<20)}</td></tr>`).join('')}
+    </tbody></table></div>
+    ${S.devices.some(d=>d.batt!=null&&d.batt<20)?`<button class="btn" style="margin-top:12px" data-act="battery">已更換低電量電池</button>`:''}</div>
+    <div class="card span-6"><h2>模擬資料</h2><p class="muted" style="font-size:13.5px;margin-bottom:12px">控制台的設定（提醒、規則、聯絡人、事件處理紀錄、設備開關）保存在這台裝置的瀏覽器中。重設後會回到預設的示範資料。</p>
+      ${ui.confirmReset?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>確定要清除所有變更？</span><button class="btn danger" data-act="reset">確定重設</button><button class="btn" data-act="noreset">取消</button></div>`:`<button class="btn danger" data-act="askreset">重設示範資料</button>`}</div>
+  </div>`;
+};
+
+/* ================= 互動 ================= */
+const ACT={
+  go(el){cur=el.dataset.v;ui.menu=false;try{history.replaceState(null,'','#'+cur)}catch(e){};render();window.scrollTo(0,0)},
+  menu(){ui.menu=!ui.menu;render()},
+  sim(el){ui.menu=false;SIMS[el.dataset.k].run();save();render()},
+  mode(el){const m=el.dataset.m;S.mode=m;
+    if(m==='外出'){S.devices.forEach(d=>{if(['light','relay','ac','tv'].includes(d.type))d.on=false});}
+    if(m==='就寢'){S.devices.forEach(d=>{if(['light','relay','tv'].includes(d.type))d.on=false});const h=dev('走廊','light');h.on=true;h.bri=10;}
+    addEvent({sev:'info',type:'模式切換',room:'客廳',who:'主神',text:`切換為${m}模式${m==='外出'?'：關閉全屋燈光、冷氣與電視':m==='就寢'?'：關閉燈光，走廊夜燈 10%':''}。`,status:'done',notify:false,handledAt:Date.now()});
+    save();render()},
+  quick(el){const q=el.dataset.q;
+    if(q==='alloff'){S.devices.forEach(d=>{if(['light','relay'].includes(d.type))d.on=false});addEvent({sev:'info',type:'遠端操作',room:'客廳',who:'家屬',text:'家屬從控制台關閉全屋燈光。',status:'done',notify:false,handledAt:Date.now()});toast('已關閉全屋燈光')}
+    if(q==='path'){['走廊','浴室'].forEach(r=>{S.devices.filter(d=>d.room===r&&(d.type==='light'||d.type==='relay')).forEach(d=>{d.on=true;if(d.type==='light')d.bri=40})});addEvent({sev:'info',type:'遠端操作',room:'走廊',who:'家屬',text:'家屬從控制台開啟走廊與浴室燈。',status:'done',notify:false,handledAt:Date.now()});toast('已開啟走廊與浴室燈')}
+    if(q==='weather'){const n=stoneOf(sim.elder.room);S.voice.unshift({id:uid(),ts:Date.now(),node:n,text:'（家屬觸發）播報天氣',intent:'天氣播報',route:'cloud',reply:'今天多雲，傍晚會轉涼，出門記得帶外套。',ms:1420});toast(`已由${n}播報天氣`)}
+    save();render()},
+  toggle(el){const d=S.devices.find(x=>x.id===el.dataset.id);d.on=!d.on;save();
+    el.setAttribute('aria-checked',d.on);updateLive();renderNav()},
+  ac(el){const d=S.devices.find(x=>x.id===el.dataset.id);d.set=clamp(d.set+ +el.dataset.d,18,30);save();render()},
+  devroom(el){ui.devRoom=ui.devRoom===el.dataset.r?'all':el.dataset.r;render()},
+  devkind(el){ui.devKind=el.dataset.k;render()},
+  evrow(el){ui.evOpen=ui.evOpen===el.dataset.id?null:el.dataset.id;render()},
+  openev(el){cur='events';ui.evOpen=el.dataset.id;ui.evFilter={sev:'all',status:'all',room:'all'};render();window.scrollTo(0,0)},
+  addrem(){ui.addRem=!ui.addRem;render()},
+  remtoggle(el){const r=S.reminders.find(x=>x.id===el.dataset.id);r.on=!r.on;save();render()},
+  remdel(el){S.reminders=S.reminders.filter(x=>x.id!==el.dataset.id);save();render();toast('提醒已刪除')},
+  addrule(){ui.addRule=!ui.addRule;render()},
+  ruletoggle(el){const r=S.rules.find(x=>x.id===el.dataset.id);if(r.locked)return;r.on=!r.on;save();render()},
+  ruledel(el){S.rules=S.rules.filter(x=>x.id!==el.dataset.id);save();render();toast('規則已刪除')},
+  quiet(){S.notify.quiet=!S.notify.quiet;save();render()},
+  addcontact(){ui.addContact=!ui.addContact;render()},
+  cup(el){const s=[...S.contacts].sort((a,b)=>a.order-b.order),i=s.findIndex(c=>c.id===el.dataset.id);if(i>0){const t=s[i].order;s[i].order=s[i-1].order;s[i-1].order=t;}save();render()},
+  cdel(el){S.contacts=S.contacts.filter(c=>c.id!==el.dataset.id);save();render()},
+  battery(){S.devices.forEach(d=>{if(d.batt!=null&&d.batt<20)d.batt=100});S.events.forEach(e=>{if(e.type==='電量偏低'&&e.status==='pending'){e.status='done';e.handledAt=Date.now();e.note='已更換電池。'}});save();render();toast('已記錄電池更換')},
+  askreset(){ui.confirmReset=true;render()}, noreset(){ui.confirmReset=false;render()},
+  reset(){S=seedAll();ui.confirmReset=false;try{localStorage.removeItem(KEY)}catch(e){};save();render();toast('已重設為示範資料')}
+};
+const main=$('#main');
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el){ if(ui.menu&&!e.target.closest('.pop')){ui.menu=false;render();} return;}
+  if(el.disabled) return;
+  ACT[el.dataset.act]?.(el);
+});
+main.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('tr.row')){e.preventDefault();ACT.evrow(e.target)}});
+main.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset.evf){ui.evFilter[t.dataset.evf]=t.value;ui.evOpen=null;render();}
+  if(t.dataset.nt){S.notify[t.dataset.nt][t.dataset.c]=t.checked;save();}
+});
+function bindRanges(){
+  main.querySelectorAll('[data-range]').forEach(r=>{
+    r.addEventListener('input',()=>{const d=S.devices.find(x=>x.id===r.dataset.range);d.bri=+r.value;if(!d.on)d.on=true;
+      const sw=r.parentElement.querySelector('.sw');if(sw)sw.setAttribute('aria-checked','true');updateLive();});
+    r.addEventListener('change',save);
+  });
+}
+main.addEventListener('submit',e=>{
+  e.preventDefault(); const f=e.target;
+  if(f.id==='say-form'){const t=$('#say-text').value.trim();if(!t)return;const n=stoneOf(sim.elder.room);
+    S.voice.unshift({id:uid(),ts:Date.now(),node:n,text:'（家屬傳話）'+t,intent:'家屬傳話',route:'local',reply:'已播放',ms:320});
+    addEvent({sev:'info',type:'家屬傳話',room:sim.elder.room,who:'家屬',text:`由${n}播放：「${t}」`,status:'done',notify:false,handledAt:Date.now()});
+    toast(`已由${n}在${sim.elder.room}播放`);render();}
+  if(f.dataset.evform){const ev=S.events.find(x=>x.id===f.dataset.evform);ev.status='done';ev.handledAt=Date.now();ev.note=$('#note-'+ev.id).value.trim()||'已確認。';resolveSide(ev);save();ui.evOpen=null;render();toast('事件已標記為已處理');}
+  if(f.id==='rem-form'){S.reminders.push({id:uid(),time:$('#rem-time').value,label:$('#rem-label').value.trim(),kind:$('#rem-kind').value,days:$('#rem-days').value,node:'跟隨長者',on:true});ui.addRem=false;save();render();toast('提醒已新增')}
+  if(f.id==='rule-form'){S.rules.push({id:uid(),name:$('#ru-name').value.trim(),when:$('#ru-when').value,if:$('#ru-if').value,then:$('#ru-then').value,on:true,count:0,last:null});ui.addRule=false;save();render();toast('規則已新增')}
+  if(f.id==='contact-form'){S.contacts.push({id:uid(),name:$('#ct-name').value.trim(),rel:$('#ct-rel').value.trim()||'家屬',phone:$('#ct-phone').value.trim()||'—',ch:['App'],order:Math.max(0,...S.contacts.map(c=>c.order))+1});ui.addContact=false;save();render()}
+  if(f.id==='elder-form'){S.elder={name:$('#el-name').value.trim()||'長者',age:+$('#el-age').value||'',note:$('#el-note').value.trim()};save();render();toast('長者資料已儲存')}
+});
+/* 提示框 */
+const tip=$('#tip');
+main.addEventListener('mousemove',e=>{const g=e.target.closest('[data-tip]');if(!g){tip.style.display='none';return}
+  tip.textContent=g.dataset.tip;tip.style.display='block';const x=Math.min(e.clientX+14,innerWidth-tip.offsetWidth-8);tip.style.left=x+'px';tip.style.top=(e.clientY+14)+'px'});
+main.addEventListener('mouseleave',()=>tip.style.display='none');
+
+/* 偶發的環境事件：讓控制台看起來在運作 */
+setInterval(()=>{
+  const h=new Date().getHours();
+  if(Math.random()<.35){
+    const opts=[['服藥提醒','翠葉','播報提醒，長者回覆「好」。'],['語音指令','翠葉','長者說「開客廳的燈」，已開啟。'],['空氣品質','翠葉','PM2.5 短暫升高後回落，無需處理。']];
+    const o=opts[Math.floor(Math.random()*opts.length)];
+    if(h>=7&&h<22){addEvent({sev:'info',type:o[0],room:sim.elder.room,who:o[1],text:o[2],status:'auto',notify:false}); if(cur==='overview'||cur==='events') render(); else renderNav();}
+  }
+},75000);
+
+render();
+setInterval(step,3000);
+})();
+</script>
+</body>
+</html>

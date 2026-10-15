@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Home Guardian 守家：為高齡家庭設計的語音式智慧家庭守護系統，主神 × 式守架構、邊緣 AI 與不使用攝影機的居家守護。">
+<meta property="og:description" content="Home Guardian 守家：為高齡家庭設計的語音式智慧家庭守護系統，主神 × 式守架構、邊緣 AI 與不使用攝影機的居家守護。">
+<meta property="og:site_name" content="DesignJarvis">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>守家 Home Guardian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700;900&family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@400;500&display=swap">
+<style>
+/* 版面：一座枯山水庭園。家＝庭，主神＝主石，式守＝散置的石組；砂紋即感測網路。留白多、線細、色淡。 */
+:root{
+  --sand:#E5E2D8;      /* 白砂 */
+  --sand-2:#DAD6CA;    /* 濕砂／面板 */
+  --rake:#C6C0B0;      /* 砂紋 */
+  --ink:#26251F;       /* 墨 */
+  --ink-2:#5F5C52;     /* 淡墨 */
+  --line:#B9B3A3;
+  --stone:#7C786E;
+  --stone-dark:#45433D;
+  --moss:#5E6F45;      /* 苔 */
+  --bengara:#93442D;   /* 弁柄（警示／印） */
+  --lamp:#C99A45;      /* 行燈 */
+  --night:rgba(14,16,24,.52);
+  --c-fire:#9A4A31; --c-moon:#46617F; --c-leaf:#5D7344; --c-sun:#B08D4A; --c-star:#655279;
+  --f-display:"Zen Old Mincho","Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-ui:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sand:#1B1B18; --sand-2:#23231F; --rake:#3B3A33; --ink:#E3DFD3; --ink-2:#A39F93; --line:#45433C;
+  --stone:#8B877C; --stone-dark:#64615A; --moss:#8C9C6C; --bengara:#C46B4F; --lamp:#E2B566;
+  --night:rgba(0,0,0,.5);
+  --c-fire:#C26B50; --c-moon:#7896B8; --c-leaf:#8FA670; --c-sun:#D2B06A; --c-star:#9A86B0;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --sand:#1B1B18; --sand-2:#23231F; --rake:#3B3A33; --ink:#E3DFD3; --ink-2:#A39F93; --line:#45433C;
+  --stone:#8B877C; --stone-dark:#64615A; --moss:#8C9C6C; --bengara:#C46B4F; --lamp:#E2B566;
+  --night:rgba(0,0,0,.5);
+  --c-fire:#C26B50; --c-moon:#7896B8; --c-leaf:#8FA670; --c-sun:#D2B06A; --c-star:#9A86B0;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--sand);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.85;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,48px)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--bengara);outline-offset:3px}
+h1,h2,h3{text-wrap:balance;font-weight:600;margin:0}
+p{margin:0}
+.ui{font-family:var(--f-ui)}
+.eyebrow{font-family:var(--f-ui);font-size:12px;letter-spacing:.24em;color:var(--ink-2);text-transform:uppercase}
+
+/* 頂部 */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--sand) 88%,transparent);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.seal{width:30px;height:30px;border:1.5px solid var(--bengara);color:var(--bengara);display:grid;place-items:center;
+  font-family:var(--f-display);font-weight:900;font-size:17px;border-radius:3px;transform:rotate(-3deg);flex:none}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-size:18px;letter-spacing:.1em}
+nav.sections{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.sections a{font-family:var(--f-ui);font-size:13px;text-decoration:none;color:var(--ink-2);padding:6px 10px;border-radius:2px;white-space:nowrap}
+nav.sections a:hover{color:var(--ink);background:var(--sand-2)}
+nav.sections a b{font-family:var(--f-display);font-weight:700;color:var(--ink);margin-right:4px}
+
+/* 序 */
+.hero{padding-block:56px 28px;display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,5vw,72px);align-items:start}
+.hero .vtitle{writing-mode:vertical-rl;font-family:var(--f-display);font-weight:900;font-size:clamp(76px,11vw,148px);
+  line-height:1;letter-spacing:.08em;margin:0;color:var(--ink)}
+.hero .copy{display:grid;gap:22px;padding-top:6px;min-width:0}
+.hero .tagline{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,3.4vw,40px);line-height:1.35;letter-spacing:.06em}
+.hero .lede{max-width:36em;color:var(--ink-2);font-size:17px}
+.facts{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-width:44em}
+.facts div{flex:1 1 150px;padding:12px 16px 12px 0;display:grid;gap:2px}
+.facts div+div{padding-left:16px;border-left:1px solid var(--line)}
+.facts dt{font-family:var(--f-ui);font-size:11px;letter-spacing:.2em;color:var(--ink-2)}
+.facts dd{margin:0;font-size:15px}
+
+/* 段落標題 */
+section.block{padding-block:56px;border-top:1px solid var(--line)}
+.shead{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:end;margin-bottom:28px}
+.shead .glyph{font-family:var(--f-display);font-weight:900;font-size:64px;line-height:.9;color:var(--ink)}
+.shead h2{font-size:clamp(22px,2.6vw,28px);letter-spacing:.06em}
+.shead p{color:var(--ink-2);max-width:40em;margin-top:6px;font-size:15.5px}
+
+/* 庭 */
+.garden-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:28px;align-items:start}
+.garden-box{position:relative;min-width:0}
+#garden{width:100%;aspect-ratio:3/2;display:block;border:1px solid var(--line);border-radius:2px;background:var(--sand);cursor:default;touch-action:manipulation}
+.clock{position:absolute;top:12px;right:14px;font-family:var(--f-ui);font-size:12px;letter-spacing:.12em;color:var(--ink-2);
+  background:color-mix(in srgb,var(--sand) 80%,transparent);padding:2px 8px;border-radius:2px;font-variant-numeric:tabular-nums}
+.row-label{font-family:var(--f-ui);font-size:12px;letter-spacing:.18em;color:var(--ink-2);margin:18px 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--f-ui);font-size:13.5px;background:transparent;color:var(--ink);border:1px solid var(--line);
+  padding:7px 14px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .2s,border-color .2s}
+.chip:hover{border-color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--sand);border-color:var(--ink)}
+.chip .dot{width:9px;height:9px;border-radius:50%;background:var(--dot,var(--stone-dark));flex:none}
+.chip small{font-size:11.5px;color:inherit;opacity:.65;font-variant-numeric:tabular-nums}
+
+.panel{background:var(--sand-2);border:1px solid var(--line);border-radius:2px;min-width:0;display:flex;flex-direction:column}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;font-family:var(--f-ui);font-size:13px;letter-spacing:.12em;background:none;border:0;color:var(--ink-2);
+  padding:12px 8px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.pbody{padding:20px 22px 22px;min-height:420px}
+.scen-title{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.scen-title h3{font-size:21px;letter-spacing:.06em}
+.scen-title span{font-family:var(--f-ui);font-size:12px;color:var(--ink-2);letter-spacing:.1em}
+ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:0}
+ol.steps li{display:grid;grid-template-columns:62px 1fr;gap:12px;padding:11px 0;border-top:1px dashed var(--line);animation:settle .5s ease both}
+ol.steps li:first-child{border-top:0}
+.st-time{font-family:var(--f-ui);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;padding-top:3px}
+.st-meta{display:flex;align-items:center;gap:8px;font-family:var(--f-ui);font-size:12px;color:var(--ink-2);margin-bottom:2px;flex-wrap:wrap}
+.st-meta .who{color:var(--ink);font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.st-meta .who i{width:8px;height:8px;border-radius:50%;background:var(--dot)}
+.tag{font-size:11px;padding:0 7px;border:1px solid var(--line);border-radius:2px;letter-spacing:.06em}
+.tag.cloud{border-color:var(--c-moon);color:var(--c-moon)}
+.tag.local{border-color:var(--moss);color:var(--moss)}
+.tag.alert{border-color:var(--bengara);color:var(--bengara)}
+.st-text{font-size:15px;line-height:1.7}
+.voice{font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.6;padding-left:14px;border-left:2px solid var(--ink-2)}
+.voice::before{content:"「"}.voice::after{content:"」"}
+.push{margin-top:6px;background:var(--sand);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:2px;font-family:var(--f-ui)}
+.push b{font-size:13px;font-weight:500;display:flex;gap:8px;align-items:center}
+.push b::before{content:"守";font-family:var(--f-display);font-size:11px;width:18px;height:18px;display:grid;place-items:center;background:var(--bengara);color:var(--sand);border-radius:4px}
+.push span{font-size:13px;color:var(--ink-2);line-height:1.5}
+.replay{margin-top:16px;font-family:var(--f-ui);font-size:13px;background:none;border:1px solid var(--ink);color:var(--ink);padding:7px 14px;border-radius:2px;cursor:pointer}
+.replay:hover{background:var(--ink);color:var(--sand)}
+.note{font-family:var(--f-ui);font-size:12px;color:var(--ink-2);margin-top:12px}
+
+.stone-card h3{font-family:var(--f-display);font-weight:900;font-size:40px;letter-spacing:.1em;line-height:1.1}
+.stone-card .sub{font-family:var(--f-ui);font-size:13px;color:var(--ink-2);letter-spacing:.1em;margin:6px 0 16px;display:flex;gap:10px;align-items:center}
+.stone-card .sub i{width:10px;height:10px;border-radius:50%;background:var(--dot)}
+.stone-card p{font-size:15.5px}
+.stone-card dl{margin:18px 0 0;display:grid;grid-template-columns:76px 1fr;gap:8px 14px;font-size:14.5px}
+.stone-card dt{font-family:var(--f-ui);font-size:12px;color:var(--ink-2);letter-spacing:.12em;padding-top:2px}
+.stone-card dd{margin:0}
+.stone-card ul{margin:0;padding-left:1.1em}
+
+/* 聲 */
+.voice-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.chat{background:var(--sand-2);border:1px solid var(--line);border-radius:2px;display:flex;flex-direction:column}
+.chat-log{padding:20px 22px;display:grid;gap:14px;max-height:440px;min-height:300px;overflow-y:auto;align-content:start}
+.msg{display:grid;gap:4px;max-width:88%;animation:settle .4s ease both}
+.msg.user{justify-self:end;text-align:right}
+.msg .bubble{font-size:15.5px;line-height:1.65;padding:10px 14px;border-radius:2px}
+.msg.user .bubble{background:var(--ink);color:var(--sand)}
+.msg.bot .bubble{background:var(--sand);border:1px solid var(--line);font-family:var(--f-display);font-weight:700}
+.msg .route{font-family:var(--f-ui);font-size:11.5px;color:var(--ink-2);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.msg.user .route{justify-content:flex-end}
+.chat form{display:flex;gap:8px;border-top:1px solid var(--line);padding:12px}
+.chat input{flex:1;min-width:0;font-family:var(--f-ui);font-size:15px;background:var(--sand);color:var(--ink);border:1px solid var(--line);border-radius:2px;padding:9px 12px}
+.chat form button{font-family:var(--f-ui);font-size:14px;background:var(--ink);color:var(--sand);border:0;border-radius:2px;padding:0 16px;cursor:pointer}
+.split{display:grid;gap:0;border:1px solid var(--line)}
+.split > div{padding:18px 20px}
+.split > div + div{border-top:1px solid var(--line)}
+.split h3{font-size:17px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.split ul{margin:0;padding-left:1.1em;font-size:15px;color:var(--ink-2)}
+.split ul li::marker{color:var(--line)}
+
+/* 層 */
+.stack{display:grid;gap:10px}
+.layer{display:grid;grid-template-columns:minmax(0,var(--w)) 1fr;gap:24px;align-items:center}
+.rock{background:var(--rc);color:var(--sand);padding:14px 22px;font-family:var(--f-display);font-weight:700;font-size:17px;letter-spacing:.12em;
+  border-radius:var(--rr);min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rock small{font-family:var(--f-ui);font-weight:400;font-size:11px;letter-spacing:.14em;opacity:.8}
+.layer p{font-size:14.5px;color:var(--ink-2);line-height:1.7;min-width:0}
+.layer p b{color:var(--ink);font-weight:600}
+.hw{margin-top:30px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:620px}
+th,td{text-align:left;padding:11px 14px 11px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-ui);font-weight:500;font-size:12px;letter-spacing:.14em;color:var(--ink-2)}
+tr.us td{color:var(--ink);font-weight:600}
+td.muted{color:var(--ink-2)}
+
+/* 新 */
+.innov{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.innov > div{padding:22px 22px 24px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.innov > div:not(:nth-child(3n+1)){padding-left:22px;border-left:1px solid var(--line)}
+.innov .k{font-family:var(--f-display);font-weight:900;font-size:34px;line-height:1;color:var(--ink-2)}
+.innov h3{font-size:16.5px;margin-bottom:6px}
+.innov p{font-size:14.5px;color:var(--ink-2);line-height:1.7}
+.compare{margin-top:40px;overflow-x:auto}
+
+/* 道 */
+.path{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;position:relative;margin-bottom:40px}
+.path li{list-style:none;padding:18px 16px 0 0;position:relative;border-top:1px solid var(--ink-2)}
+.path li::before{content:"";position:absolute;top:-6px;left:0;width:11px;height:11px;border-radius:50%;background:var(--sand);border:1.5px solid var(--ink)}
+.path .n{font-family:var(--f-ui);font-size:11.5px;letter-spacing:.16em;color:var(--ink-2)}
+.path h3{font-size:16px;margin:4px 0 6px}
+.path p{font-size:13.5px;color:var(--ink-2);line-height:1.65}
+ol.path{padding:0;margin:0 0 40px}
+.horizon{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.horizon div{display:grid;gap:6px}
+.horizon h3{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.1em}
+.horizon p{font-size:14.5px;color:var(--ink-2)}
+
+/* 人 */
+.team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.team div{padding:18px 18px 18px 0;border-bottom:1px solid var(--line)}
+.team div:not(:nth-child(3n+1)){padding-left:18px;border-left:1px solid var(--line)}
+.team b{font-family:var(--f-display);font-weight:700;font-size:21px;letter-spacing:.14em;display:block}
+.team span{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2)}
+footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@keyframes settle{from{opacity:.25;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+@media (max-width:900px){
+  .garden-grid,.voice-grid{grid-template-columns:1fr}
+  .pbody{min-height:0}
+  .innov,.team{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .innov > div,.team div{padding-left:0 !important;border-left:0 !important}
+  .innov > div:nth-child(2n),.team div:nth-child(2n){padding-left:18px !important;border-left:1px solid var(--line) !important}
+  .path{grid-template-columns:1fr;gap:0}
+  .path li{border-top:0;border-left:1px solid var(--ink-2);padding:0 0 22px 22px}
+  .path li::before{top:4px;left:-6px}
+  .horizon{grid-template-columns:1fr}
+  .layer{grid-template-columns:1fr;gap:6px}
+  .rock{max-width:var(--w)}
+}
+@media (max-width:560px){
+  .hero{grid-template-columns:1fr;padding-block:32px 16px}
+  .hero .vtitle{writing-mode:horizontal-tb;font-size:72px;letter-spacing:.12em}
+  .innov,.team{grid-template-columns:1fr}
+  .innov > div:nth-child(2n),.team div:nth-child(2n){padding-left:0 !important;border-left:0 !important}
+  .shead .glyph{font-size:46px}
+  .facts div+div{padding-left:0;border-left:0}
+  .facts div{flex-basis:100%;border-bottom:1px solid var(--line)}
+  .facts div:last-child{border-bottom:0}
+  .rock{max-width:100%}
+  nav.sections a{padding:6px 7px}
+  nav.sections a span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="seal" aria-hidden="true">守</span>守家</a>
+    <nav class="sections" aria-label="章節">
+      <a href="#garden-sec"><b>庭</b><span>情境</span></a>
+      <a href="#voice-sec"><b>聲</b><span>語音</span></a>
+      <a href="#layer-sec"><b>層</b><span>架構</span></a>
+      <a href="#new-sec"><b>新</b><span>創新</span></a>
+      <a href="#path-sec"><b>道</b><span>進程</span></a>
+      <a href="#team-sec"><b>人</b><span>團隊</span></a>
+      <a href="console.html" style="border:1px solid var(--line)"><b>台</b><span>後台 ↗</span></a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <section class="hero">
+    <h1 class="vtitle">守家</h1>
+    <div class="copy">
+      <div class="eyebrow">Home Guardian · 語音式智慧家庭守護系統</div>
+      <p class="tagline">一句話，<br>守一個家。</p>
+      <p class="lede">為高齡家庭設計的居家守護系統。客廳裡的「主神」是一台本地運算的 AI 主機，分散在各個房間的「式守」負責感知與回報。長輩不用學 App，開口說話就能開燈、問天氣、聽吃藥提醒；夜裡起床、瓦斯外洩、電器忘了關，系統也會主動處理並通知家屬。</p>
+      <dl class="facts">
+        <div><dt>為誰而做</dt><dd>長者與不熟悉科技的家人</dd></div>
+        <div><dt>架構</dt><dd>主神 × 五式守</dd></div>
+        <div><dt>隱私</dt><dd>不裝攝影機，資料留在家中</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 庭 -->
+  <section class="block" id="garden-sec">
+    <div class="shead">
+      <div class="glyph" aria-hidden="true">庭</div>
+      <div>
+        <h2>把家看成一座庭園</h2>
+        <p>主神是庭中的主石，五位式守依房間散置。點選石頭可查看它守護的空間與感測器，選一個情境，看守家如何從感知、判斷到執行。</p>
+      </div>
+    </div>
+    <div class="garden-grid">
+      <div class="garden-box">
+        <canvas id="garden" role="img" aria-label="守家居家部署示意：主神位於客廳，赤火守廚房、蒼月守臥室、翠葉守客廳、白日守玄關、紫星守走廊"></canvas>
+        <div class="clock" id="clock">02:47</div>
+        <div class="row-label">情境</div>
+        <div class="chips" id="scen-chips"></div>
+        <div class="row-label">式守</div>
+        <div class="chips" id="stone-chips"></div>
+      </div>
+      <div class="panel">
+        <div class="tabs" role="tablist">
+          <button role="tab" id="tab-log" aria-selected="true" aria-controls="pbody">情境紀錄</button>
+          <button role="tab" id="tab-stone" aria-selected="false" aria-controls="pbody">式守檔案</button>
+        </div>
+        <div class="pbody" id="pbody" role="tabpanel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 聲 -->
+  <section class="block" id="voice-sec">
+    <div class="shead">
+      <div class="glyph" aria-hidden="true">聲</div>
+      <div>
+        <h2>開口就好</h2>
+        <p>每個房間都有一個語音節點。一般控制指令在家裡的主神就處理完；需要開放式問答或陪伴聊天，才交給雲端語言模型。</p>
+      </div>
+    </div>
+    <div class="voice-grid">
+      <div class="chat">
+        <div class="chat-log" id="chat-log" aria-live="polite"></div>
+        <form id="chat-form">
+          <label for="chat-input" class="eyebrow" style="position:absolute;left:-9999px">對守家說</label>
+          <input id="chat-input" autocomplete="off" placeholder="試試「幫我開燈」或「陪我聊聊」">
+          <button type="submit">說</button>
+        </form>
+      </div>
+      <div>
+        <div class="row-label" style="margin-top:0">常用說法</div>
+        <div class="chips" id="phrase-chips" style="margin-bottom:26px"></div>
+        <div class="split">
+          <div>
+            <h3><span class="tag local">本地</span>留在家裡</h3>
+            <ul>
+              <li>所有感測資料：動作、毫米波雷達、門窗、溫濕度、煙霧、瓦斯</li>
+              <li>開燈、關電器、冷氣電視等控制指令</li>
+              <li>情境規則的判斷；斷網時照明與警示照常運作</li>
+            </ul>
+          </div>
+          <div>
+            <h3><span class="tag cloud">雲端</span>經同意才出門</h3>
+            <ul>
+              <li>使用者主動開口的開放式問答、生活建議與陪伴對話</li>
+              <li>透過雲端閘道推播給家屬的異常通知</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note">對話為示範內容，依關鍵字回覆預設句子。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 層 -->
+  <section class="block" id="layer-sec">
+    <div class="shead">
+      <div class="glyph" aria-hidden="true">層</div>
+      <div>
+        <h2>五層石組</h2>
+        <p>由下而上疊起：感測層蒐集環境，控制層驅動設備，語音層負責對話，中央運算層做決策，雲端服務層只在必要時登場。每個元件都可以替換，不綁定單一廠牌。</p>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="layer" style="--w:48%"><div class="rock" style="--rc:var(--c-moon);--rr:46% 54% 40% 60% / 60% 55% 45% 40%">雲端服務層<small>CLOUD</small></div>
+        <p><b>雲端大型語言模型 API、雲端閘道。</b>開放式對話與陪伴；家屬遠端通知與遠端管理。</p></div>
+      <div class="layer" style="--w:64%"><div class="rock" style="--rc:var(--stone-dark);--rr:30% 70% 48% 52% / 55% 45% 55% 45%">中央運算層・主神<small>EDGE AI</small></div>
+        <p><b>NVIDIA Jetson Orin Nano SUPER、1TB NVMe SSD、15 吋觸控儀表板。</b>喚醒詞、語音轉文字、意圖判斷、語音合成與情境規則都在本地執行。</p></div>
+      <div class="layer" style="--w:76%"><div class="rock" style="--rc:var(--c-star);--rr:22% 78% 35% 65% / 50% 60% 40% 50%">語音互動層<small>VOICE</small></div>
+        <p><b>M5Stack ATOM Echo 語音節點，每房一個。</b>負責收音與播放，經 Wi-Fi 與主神往返。</p></div>
+      <div class="layer" style="--w:88%"><div class="rock" style="--rc:var(--c-leaf);--rr:18% 82% 26% 74% / 55% 45% 55% 45%">控制層<small>CONTROL</small></div>
+        <p><b>小米智慧插座、Tuya 無線繼電器、小米無線 LED 燈、Tuya 紅外線遙控器。</b>插座同時回傳用電，用來判斷電器是否忘了關。</p></div>
+      <div class="layer" style="--w:100%"><div class="rock" style="--rc:var(--c-fire);--rr:12% 88% 20% 80% / 50% 50% 50% 50%">感測層・式守<small>ZIGBEE</small></div>
+        <p><b>Aqara Zigbee Hub，加上人體、門窗、溫濕度、毫米波雷達、空氣品質、煙霧、瓦斯感測器。</b>電池供電、免布線，舊房子也能直接裝。</p></div>
+    </div>
+  </section>
+
+  <!-- 新 -->
+  <section class="block" id="new-sec">
+    <div class="shead">
+      <div class="glyph" aria-hidden="true">新</div>
+      <div>
+        <h2>和一般智慧家居哪裡不同</h2>
+        <p>市售產品以「控制設備」與「手機 App」為中心；守家從長輩的日常與家屬的擔心出發重新設計。</p>
+      </div>
+    </div>
+    <div class="innov">
+      <div><span class="k">形</span><div><h3>角色化的主神與式守</h3><p>每位式守有自己的造型與守護的房間，冷冰冰的設備變成看得懂、叫得出名字的家中成員。</p></div></div>
+      <div><span class="k">言</span><div><h3>一句話完成操作</h3><p>不必學 App、不必記選單，用平常說話的方式就能控制、查詢與接收提醒。</p></div></div>
+      <div><span class="k">先</span><div><h3>主動守護</h3><p>不等指令。夜間起床自動照明、久未活動主動關心、瓦斯異常立即警示。</p></div></div>
+      <div><span class="k">混</span><div><h3>邊緣與雲端混合</h3><p>本地處理確保即時與隱私；雲端模型提供自然對話與陪伴。</p></div></div>
+      <div><span class="k">隱</span><div><h3>不用攝影機</h3><p>以毫米波雷達、人體與門窗感測取代影像監看，守護長輩也保有尊嚴。</p></div></div>
+      <div><span class="k">增</span><div><h3>式守可增可減</h3><p>依房屋格局增減式守，擴充環境、電力、空氣品質感測，部署成本低。</p></div></div>
+    </div>
+    <div class="compare">
+      <table>
+        <thead><tr><th>類型</th><th>代表產品</th><th>優勢</th><th>不足之處</th></tr></thead>
+        <tbody>
+          <tr><td>智慧音箱平台</td><td>Google Nest、Amazon Alexa、Apple HomePod</td><td class="muted">語音助理成熟、相容設備多</td><td class="muted">設定仰賴 App，沒有主動守護與長者情境</td></tr>
+          <tr><td>智慧家居生態</td><td>小米米家、Aqara</td><td class="muted">感測器種類多、價格親民</td><td class="muted">以設備控制為主，自動化要自己設定</td></tr>
+          <tr><td>開源平台</td><td>Home Assistant</td><td class="muted">彈性高、可本地運作</td><td class="muted">需要技術能力自行建置</td></tr>
+          <tr><td>居家照護通報</td><td>緊急救援連線、居家攝影機</td><td class="muted">有緊急通報與專人服務</td><td class="muted">多為被動按鈕或影像監看，有隱私疑慮</td></tr>
+          <tr class="us"><td>守家</td><td>主神 × 式守</td><td>語音互動＋主動守護＋非影像感測</td><td>專為高齡家庭設計，免學習</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 道 -->
+  <section class="block" id="path-sec">
+    <div class="shead">
+      <div class="glyph" aria-hidden="true">道</div>
+      <div>
+        <h2>研發進程與商品化</h2>
+        <p>計畫執行期程為民國 115 年 3 月至 8 月，分五個階段推進。</p>
+      </div>
+    </div>
+    <ol class="path">
+      <li><div class="n">第一階段</div><h3>概念與架構</h3><p>確立主神 × 式守架構、資料流，完成需求訪談與情境清單。</p></li>
+      <li><div class="n">第二階段</div><h3>原型實作</h3><p>建置 Jetson 主機、Zigbee 感測網路、照明控制與語音節點。</p></li>
+      <li><div class="n">第三階段</div><h3>模組整合</h3><p>串起感測、控制與語音；建立情境規則與雲端對話。</p></li>
+      <li><div class="n">第四階段</div><h3>情境測試</h3><p>在模擬居家環境長時間運作，調整流程與互動體驗。</p></li>
+      <li><div class="n">第五階段</div><h3>外觀與成果</h3><p>3D 列印主機與式守外殼，完成整合展示。</p></li>
+    </ol>
+    <div class="horizon">
+      <div><div class="eyebrow">短期</div><h3>走進真實家庭</h3><p>以原型進行家庭試用，蒐集長者與家屬回饋，優化語音流程與情境規則。</p></div>
+      <div><div class="eyebrow">中期</div><h3>與照護現場合作</h3><p>完成外觀與硬體整合、降低套組成本，與長照單位或社區關懷據點做場域驗證。</p></div>
+      <div><div class="eyebrow">長期</div><h3>守護整個社區</h3><p>擴展到智慧住宅、智慧社區與長照機構，整合健康監測與緊急救援服務。</p></div>
+    </div>
+  </section>
+
+  <!-- 人 -->
+  <section class="block" id="team-sec">
+    <div class="shead">
+      <div class="glyph" aria-hidden="true">人</div>
+      <div>
+        <h2>團隊</h2>
+        <p>國立高雄科技大學 模具工程系、電機工程系</p>
+      </div>
+    </div>
+    <div class="team">
+      <div><b>鄭瑞鴻</b><span>指導老師・模具工程系 教授</span></div>
+      <div><b>林昌哲</b><span>計畫負責人・模具工程所</span></div>
+      <div><b>曾唯誠</b><span>共同負責人・模具工程所</span></div>
+      <div><b>劉晉銘</b><span>團隊成員・模具工程系</span></div>
+      <div><b>戴睿賢</b><span>團隊成員・模具工程系</span></div>
+      <div><b>郭宸毓</b><span>團隊成員・電機工程系</span></div>
+    </div>
+  </section>
+</main>
+<div class="wrap">
+  <footer>
+    <span>國立高雄科技大學 創新創業發展處「學生創意發想產業化激勵」計畫</span>
+    <span>Home Guardian — 守家 · 民國 115 年</span>
+  </footer>
+</div>
+
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = s => document.querySelector(s);
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---------- 資料 ---------- */
+const STONES = {
+  shushin:{name:'主神', role:'中央 AI 主機', room:'客廳', x:.43, y:.40, r:.058, color:'--stone-dark', main:true,
+    duty:'家的大腦。語音辨識、意圖判斷、情境規則與設備控制都在本地完成；網路中斷時，照明與警示仍照常運作。',
+    gear:['NVIDIA Jetson Orin Nano SUPER','1TB NVMe SSD','15 吋觸控儀表板','Aqara Zigbee Hub'], scen:'所有情境的判斷中心'},
+  sekka:{name:'赤火', role:'赤火守護者', room:'廚房', x:.75, y:.22, r:.03, color:'--c-fire',
+    duty:'守在爐火邊。煙霧或瓦斯濃度異常時立即語音警示，並透過雲端閘道通知家屬。',
+    gear:['煙霧感測器','瓦斯感測器','智慧插座（用電回傳）'], scen:'瓦斯異常'},
+  sogetsu:{name:'蒼月', role:'夜之式守', room:'臥室', x:.20, y:.78, r:.03, color:'--c-moon',
+    duty:'夜裡守在床邊。毫米波雷達在人靜止不動時也能感知存在，用來判斷下床與長時間未活動。',
+    gear:['毫米波雷達感測器','人體動作感測器','溫濕度感測器','ATOM Echo 語音節點'], scen:'深夜起床、久未活動'},
+  suiyo:{name:'翠葉', role:'起居之式守', room:'客廳', x:.16, y:.24, r:.03, color:'--c-leaf',
+    duty:'照看客廳日常：遙控冷氣與電視、留意空氣品質，也是陪伴聊天最常用的入口。',
+    gear:['空氣品質感測器','溫濕度感測器','紅外線遙控器','智慧插座','ATOM Echo 語音節點'], scen:'吃藥提醒、電器未關'},
+  hakujitsu:{name:'白日', role:'門之式守', room:'玄關', x:.915, y:.21, r:.024, color:'--c-sun',
+    duty:'守在門口。出門前看天氣、提醒保暖；門窗沒關好時提醒一聲。',
+    gear:['門窗感測器','人體動作感測器','ATOM Echo 語音節點'], scen:'出門保暖'},
+  shisei:{name:'紫星', role:'路之式守', room:'走廊・浴室', x:.76, y:.50, r:.03, color:'--c-star',
+    duty:'照亮夜路。偵測走廊與浴室的動靜，深夜時點亮通往洗手間的柔和燈光。',
+    gear:['人體動作感測器','無線 LED 燈','無線繼電器','ATOM Echo 語音節點'], scen:'深夜起床'}
+};
+const ROOMS = [
+  {n:'客廳', x:.03, y:.05, w:.59, h:.51},
+  {n:'臥室', x:.03, y:.60, w:.35, h:.35},
+  {n:'餐廳', x:.42, y:.60, w:.20, h:.35},
+  {n:'廚房', x:.66, y:.05, w:.20, h:.36},
+  {n:'玄關', x:.88, y:.05, w:.09, h:.36, v:true},
+  {n:'走廊', x:.66, y:.45, w:.31, h:.12},
+  {n:'浴室', x:.66, y:.61, w:.31, h:.34}
+];
+const NIGHT_PATH = [[.20,.78],[.30,.67],[.50,.645],[.70,.53],[.84,.53],[.84,.70],[.87,.80]];
+
+const SCENS = [
+  {id:'night', name:'深夜起床', time:'02:47', night:true, steps:[
+    {t:'02:47:10', layer:'感測', who:'sogetsu', route:'local', text:'毫米波雷達感知長者從躺臥坐起，接著下床。', fx:a=>{a.night(1);a.pulse('sogetsu');a.signal('sogetsu','shushin')}},
+    {t:'02:47:11', layer:'判斷', who:'shushin', route:'local', text:'深夜時段加上下床事件，符合「夜間如廁」情境，在家中即完成判斷。', fx:a=>a.pulse('shushin')},
+    {t:'02:47:11', layer:'執行', who:'shisei', route:'local', text:'走廊與浴室亮起柔和燈光，照出通往洗手間的路。', fx:a=>{a.signal('shushin','shisei');a.lit(1);a.pulse('shisei')}},
+    {t:'02:47:12', layer:'語音', who:'sogetsu', route:'local', voice:'燈幫您打開了，慢慢走。', fx:a=>a.pulse('sogetsu')}
+  ]},
+  {id:'pill', name:'吃藥提醒', time:'08:00', steps:[
+    {t:'08:00:00', layer:'排程', who:'shushin', route:'local', text:'早上八點的服藥排程到了。', fx:a=>a.pulse('shushin')},
+    {t:'08:00:02', layer:'感測', who:'suiyo', route:'local', text:'客廳偵測到有人活動，確認長者在客廳。', fx:a=>{a.pulse('suiyo');a.signal('suiyo','shushin')}},
+    {t:'08:00:03', layer:'語音', who:'suiyo', route:'local', voice:'早安，該吃早上的藥了，記得配溫開水。', fx:a=>{a.signal('shushin','suiyo');a.pulse('suiyo')}},
+    {t:'08:01:20', layer:'紀錄', who:'shushin', route:'local', text:'長者回答「吃了」，寫入生活紀錄，家屬可以隨時查看。', fx:a=>a.pulse('shushin')}
+  ]},
+  {id:'appliance', name:'電器未關', time:'14:20', steps:[
+    {t:'14:20:00', layer:'感測', who:'suiyo', route:'local', text:'客廳已長時間無人活動，智慧插座卻回報電暖器仍在耗電。', fx:a=>{a.alert('suiyo');a.signal('suiyo','shushin')}},
+    {t:'14:20:01', layer:'判斷', who:'shushin', route:'local', text:'房間無人加上電器運作，觸發「電器未關」情境。長者此時在臥室。', fx:a=>a.pulse('shushin')},
+    {t:'14:20:02', layer:'語音', who:'sogetsu', route:'local', voice:'客廳的電暖器還開著，要幫您關掉嗎？', fx:a=>{a.signal('shushin','sogetsu');a.pulse('sogetsu')}},
+    {t:'14:20:09', layer:'執行', who:'suiyo', route:'local', text:'長者回答「關掉」，智慧插座斷電。', fx:a=>{a.signal('shushin','suiyo');a.alert(null);a.pulse('suiyo')}}
+  ]},
+  {id:'gas', name:'瓦斯異常', time:'18:05', steps:[
+    {t:'18:05:12', layer:'感測', who:'sekka', route:'local', text:'廚房瓦斯濃度超過警戒值。', fx:a=>{a.alert('sekka');a.signal('sekka','shushin')}},
+    {t:'18:05:12', layer:'判斷', who:'shushin', route:'local', text:'屬於安全事件，以最高優先處理。', fx:a=>a.pulse('shushin')},
+    {t:'18:05:13', layer:'語音', who:'sekka', route:'alert', voice:'廚房瓦斯濃度異常，請關閉爐火，打開窗戶。', fx:a=>{['sekka','suiyo','sogetsu','shisei','hakujitsu'].forEach(k=>{a.signal('shushin',k);a.pulse(k)})}},
+    {t:'18:05:14', layer:'通報', who:'shushin', route:'cloud', text:'透過雲端閘道推播通知家屬。', push:{t:'守家・廚房瓦斯異常', b:'18:05 赤火偵測到瓦斯濃度異常，家中已發出語音警示。'}, fx:a=>a.cloud()}
+  ]},
+  {id:'still', name:'久未活動', time:'16:30', steps:[
+    {t:'16:30:00', layer:'感測', who:'sogetsu', route:'local', text:'毫米波雷達感知長者仍在床上，但已長時間幾乎沒有動作。', fx:a=>{a.pulse('sogetsu');a.signal('sogetsu','shushin')}},
+    {t:'16:30:01', layer:'判斷', who:'shushin', route:'local', text:'超過平日的活動間隔，主動關心。', fx:a=>a.pulse('shushin')},
+    {t:'16:30:02', layer:'語音', who:'sogetsu', route:'local', voice:'午覺睡得好嗎？需要我幫忙嗎？', fx:a=>{a.signal('shushin','sogetsu');a.pulse('sogetsu')}},
+    {t:'16:35:02', layer:'通報', who:'shushin', route:'cloud', text:'兩次詢問都沒有回應，通知家屬確認狀況。', push:{t:'守家・請確認長輩狀況', b:'臥室長時間未偵測到活動，語音詢問兩次未獲回應。'}, fx:a=>{a.alert('sogetsu');a.cloud()}}
+  ]},
+  {id:'weather', name:'出門保暖', time:'07:30', steps:[
+    {t:'07:30:05', layer:'感測', who:'hakujitsu', route:'local', text:'玄關偵測到有人走近大門。', fx:a=>{a.pulse('hakujitsu');a.signal('hakujitsu','shushin')}},
+    {t:'07:30:06', layer:'判斷', who:'shushin', route:'cloud', text:'查詢今日天氣：氣溫偏低、風大。', fx:a=>{a.pulse('shushin');a.cloud()}},
+    {t:'07:30:07', layer:'語音', who:'hakujitsu', route:'local', voice:'今天早上比較冷，出門記得加件外套。', fx:a=>{a.signal('shushin','hakujitsu');a.pulse('hakujitsu')}}
+  ]}
+];
+const ROUTE = {local:['本地','local'], cloud:['雲端','cloud'], alert:['警示','alert']};
+
+/* ---------- 庭園繪製 ---------- */
+const cv = $('#garden'), ctx = cv.getContext('2d');
+const base = document.createElement('canvas'), bctx = base.getContext('2d');
+let W=0, H=0, dpr=1, C={};
+const S = {ripples:[], signals:[], night:0, nightT:0, lit:0, litT:0, alert:null, selected:null, cloudT:-1e9, lastAmb:0};
+
+function seeded(seed){let s=seed;return()=>((s=Math.imul(s^(s>>>15),2246822507)^Math.imul(s^(s>>>13),3266489909),(s>>>0)/4294967296))}
+Object.entries(STONES).forEach(([k,st],i)=>{
+  const rnd = seeded(97*(i+3)); st.shape=[];
+  for(let j=0;j<13;j++) st.shape.push(.84+rnd()*.24);
+  st.squash = .78 + rnd()*.12; st.tilt = (rnd()-.5)*.6;
+});
+const px = st => [st.x*W, st.y*H];
+const ringR = st => st.r*W*(st.main?2.7:2.6);
+
+function readColors(){
+  ['--sand','--rake','--ink','--ink-2','--line','--stone','--stone-dark','--moss','--bengara','--lamp','--night',
+   '--c-fire','--c-moon','--c-leaf','--c-sun','--c-star'].forEach(n=>C[n]=cssv(n));
+}
+function stonePath(g,st,scale=1){
+  const [x,y]=px(st), r=st.r*W*scale, n=st.shape.length, pts=[];
+  for(let i=0;i<n;i++){const a=i/n*Math.PI*2+st.tilt; pts.push([x+Math.cos(a)*r*st.shape[i], y+Math.sin(a)*r*st.shape[i]*st.squash]);}
+  g.beginPath();
+  for(let i=0;i<=n;i++){const p=pts[i%n], q=pts[(i+1)%n], m=[(p[0]+q[0])/2,(p[1]+q[1])/2]; i?g.quadraticCurveTo(p[0],p[1],m[0],m[1]):g.moveTo(m[0],m[1]);}
+  g.closePath();
+}
+function drawBase(){
+  const g=bctx; g.setTransform(dpr,0,0,dpr,0,0);
+  g.fillStyle=C['--sand']; g.fillRect(0,0,W,H);
+  const sp=Math.max(5.5,W/120), stones=Object.values(STONES);
+  // 砂紋
+  g.strokeStyle=C['--rake']; g.lineWidth=1;
+  for(let y=sp/2;y<H;y+=sp){
+    g.beginPath(); let pen=false;
+    for(let x=0;x<=W;x+=2){
+      const yy=y+Math.sin(x*.013+y*.07)*.7;
+      const inside=stones.some(st=>{const [sx,sy]=px(st);return Math.hypot(x-sx,yy-sy)<ringR(st)});
+      if(inside){pen=false;continue}
+      pen?g.lineTo(x,yy):g.moveTo(x,yy); pen=true;
+    }
+    g.stroke();
+  }
+  stones.forEach(st=>{const [x,y]=px(st);for(let rr=st.r*W*1.3;rr<=ringR(st);rr+=sp){g.beginPath();g.arc(x,y,rr,0,Math.PI*2);g.stroke();}});
+  // 房間界線
+  const fs=Math.max(10,W*.0145);
+  g.strokeStyle=C['--ink-2']; g.globalAlpha=.32; g.lineWidth=1;
+  ROOMS.forEach(r=>{g.strokeRect(r.x*W+.5,r.y*H+.5,r.w*W,r.h*H)});
+  g.globalAlpha=.75; g.fillStyle=C['--ink-2']; g.font=`${fs}px "Noto Serif TC", serif`; g.textBaseline='top';
+  ROOMS.forEach(r=>{
+    if(r.v){[...r.n].forEach((ch,i)=>g.fillText(ch,(r.x+r.w/2)*W-fs/2,r.y*H+fs*.7+i*fs*1.15))}
+    else g.fillText(r.n,r.x*W+fs*.7,r.y*H+fs*.6);
+  });
+  g.globalAlpha=1;
+  // 石
+  stones.forEach(st=>{
+    const [x,y]=px(st), r=st.r*W;
+    g.save(); g.globalAlpha=.18; g.fillStyle=C['--ink']; g.beginPath(); g.ellipse(x+r*.12,y+r*.42,r*1.02,r*.5,0,0,Math.PI*2); g.fill(); g.restore();
+    const grad=g.createRadialGradient(x-r*.35,y-r*.4,r*.1,x,y,r*1.1);
+    const sc=st.main?C['--stone-dark']:C['--stone'];
+    grad.addColorStop(0,mix(sc,'#ffffff',.28)); grad.addColorStop(1,sc);
+    stonePath(g,st); g.fillStyle=grad; g.fill();
+    if(st.main){ // 苔
+      const rnd=seeded(11); g.fillStyle=C['--moss'];
+      for(let i=0;i<26;i++){const a=Math.PI*(.15+rnd()*.7), d=r*(.55+rnd()*.42); g.globalAlpha=.55+rnd()*.4; g.beginPath(); g.arc(x+Math.cos(a)*d*.9,y+Math.sin(a)*d*.55,r*(.05+rnd()*.07),0,Math.PI*2); g.fill();}
+      g.globalAlpha=1;
+      g.strokeStyle=C['--sand']; g.globalAlpha=.55; g.lineWidth=1.2; g.beginPath(); g.arc(x,y-r*.05,r*.36,0,Math.PI*2); g.stroke(); g.globalAlpha=1;
+    } else {
+      g.fillStyle=C[st.color]; g.beginPath(); g.arc(x,y-r*.08,r*.3,0,Math.PI*2); g.fill();
+    }
+    g.fillStyle=C['--ink']; g.font=`600 ${st.main?fs*1.25:fs*1.05}px "Noto Serif TC", serif`; g.textAlign='center'; g.textBaseline='top';
+    g.fillText(st.name,x,y+r*st.squash+fs*.45); g.textAlign='left';
+  });
+}
+function mix(a,b,t){const pa=hex(a),pb=hex(b);if(!pa||!pb)return a;return `rgb(${pa.map((v,i)=>Math.round(v+(pb[i]-v)*t)).join(',')})`}
+function hex(c){const m=/^#?([0-9a-f]{6})$/i.exec(c);if(!m)return null;const n=parseInt(m[1],16);return[n>>16&255,n>>8&255,n&255]}
+function rgba(c,a){const p=hex(c);return p?`rgba(${p[0]},${p[1]},${p[2]},${a})`:c}
+
+function resize(){
+  const rc=cv.getBoundingClientRect(); if(!rc.width) return;
+  W=rc.width; H=rc.height; dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.width=base.width=Math.round(W*dpr); cv.height=base.height=Math.round(H*dpr);
+  readColors(); drawBase(); if(reduce) frame(performance.now());
+}
+
+/* 動態 */
+const A = {
+  pulse(k){const st=STONES[k]; S.ripples.push({k,t0:performance.now(),dur:2200,color:C[st.color]||C['--stone-dark']}); S.lastPulse={k,t:performance.now()}},
+  signal(a,b){S.signals.push({a,b,t0:performance.now(),dur:1100})},
+  night(v){S.nightT=v},
+  lit(v){S.litT=v},
+  alert(k){S.alert=k},
+  cloud(){S.cloudT=performance.now()}
+};
+function curvePt(a,b,t){
+  const [x1,y1]=px(STONES[a]),[x2,y2]=px(STONES[b]); const mx=(x1+x2)/2,my=(y1+y2)/2, dx=x2-x1, dy=y2-y1;
+  const cx=mx-dy*.18, cy=my+dx*.18, u=1-t;
+  return [u*u*x1+2*u*t*cx+t*t*x2, u*u*y1+2*u*t*cy+t*t*y2];
+}
+function frame(now){
+  ctx.setTransform(1,0,0,1,0,0); ctx.drawImage(base,0,0); ctx.setTransform(dpr,0,0,dpr,0,0);
+  const k = reduce?1:.06;
+  S.night += (S.nightT-S.night)*k; S.lit += (S.litT-S.lit)*(reduce?1:.035);
+  if(S.night>.01){ctx.fillStyle=C['--night']; ctx.globalAlpha=S.night; ctx.fillRect(0,0,W,H); ctx.globalAlpha=1;}
+  // 夜路燈光
+  if(S.lit>.01){
+    const pts=NIGHT_PATH.map(([x,y])=>[x*W,y*H]); let total=0; const seg=[];
+    for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]); seg.push(d); total+=d;}
+    let left=total*S.lit;
+    ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
+    [[W*.05,.13],[W*.022,.28],[2,.9]].forEach(([lw,al])=>{
+      ctx.strokeStyle=rgba(C['--lamp'],al); ctx.lineWidth=lw; ctx.beginPath(); ctx.moveTo(...pts[0]); let l=left;
+      for(let i=1;i<pts.length&&l>0;i++){const d=seg[i-1], t=Math.min(1,l/d); ctx.lineTo(pts[i-1][0]+(pts[i][0]-pts[i-1][0])*t, pts[i-1][1]+(pts[i][1]-pts[i-1][1])*t); l-=d;}
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+  // 環境漣漪：主神緩慢呼吸
+  if(!reduce && now-S.lastAmb>3800){S.lastAmb=now; S.ripples.push({k:'shushin',t0:now,dur:3600,color:C['--ink-2'],amb:true});}
+  if(!reduce && S.alert && (!S.lastAlert || now-S.lastAlert>900)){S.lastAlert=now; S.ripples.push({k:S.alert,t0:now,dur:1600,color:C['--bengara']});}
+  S.ripples = S.ripples.filter(r=>now-r.t0<r.dur);
+  S.ripples.forEach(r=>{
+    const st=STONES[r.k], [x,y]=px(st), t=Math.max(0,(now-r.t0)/r.dur), r0=st.r*W*1.1, r1=ringR(st)*(r.amb?1.5:1.9);
+    ctx.strokeStyle=rgba(r.color,(1-t)*(r.amb?.35:.85)); ctx.lineWidth=r.amb?1:1.8;
+    ctx.beginPath(); ctx.arc(x,y,r0+(r1-r0)*easeOut(t),0,Math.PI*2); ctx.stroke();
+  });
+  // 訊號
+  S.signals = S.signals.filter(s=>now-s.t0<s.dur+300);
+  S.signals.forEach(s=>{
+    const t=Math.min(1,(now-s.t0)/s.dur);
+    for(let i=0;i<14;i++){const tt=t-i*.022; if(tt<0)break; const [x,y]=curvePt(s.a,s.b,tt);
+      ctx.fillStyle=rgba(C['--ink'],(1-i/14)*.8*(t<1?1:Math.max(0,1-(now-s.t0-s.dur)/300))); ctx.beginPath(); ctx.arc(x,y,Math.max(1,W*.0042*(1-i/16)),0,Math.PI*2); ctx.fill();}
+  });
+  // 警示光暈
+  if(S.alert){const st=STONES[S.alert],[x,y]=px(st); ctx.strokeStyle=C['--bengara']; ctx.lineWidth=2; stonePath(ctx,st,1.22); ctx.stroke();}
+  // 雲端
+  const ct=(now-S.cloudT)/2400;
+  if(ct>=0&&ct<1 || (reduce&&S.cloudT>0)){
+    const [x,y]=px(STONES.shushin), p=reduce?1:ct, ty=H*.04;
+    ctx.strokeStyle=rgba(C['--c-moon'],reduce?.7:(1-p)*.9); ctx.setLineDash([3,5]); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(x,y-STONES.shushin.r*W); ctx.lineTo(x,y-STONES.shushin.r*W-(y-STONES.shushin.r*W-ty)*Math.min(1,p*1.6)); ctx.stroke(); ctx.setLineDash([]);
+  }
+  // 選取
+  if(S.selected){const st=STONES[S.selected],[x,y]=px(st); ctx.strokeStyle=C['--ink']; ctx.lineWidth=1.2; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.arc(x,y,st.r*W*1.55,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);}
+  if(!reduce) requestAnimationFrame(frame);
+}
+const easeOut=t=>1-Math.pow(1-t,3);
+
+/* 點選石頭 */
+function hit(ev){
+  const rc=cv.getBoundingClientRect(), x=ev.clientX-rc.left, y=ev.clientY-rc.top;
+  return Object.keys(STONES).find(k=>{const [sx,sy]=px(STONES[k]); return Math.hypot(x-sx,y-sy)<STONES[k].r*W*1.6});
+}
+cv.addEventListener('mousemove',e=>{cv.style.cursor=hit(e)?'pointer':'default'});
+cv.addEventListener('click',e=>{const k=hit(e); if(k) selectStone(k)});
+
+/* ---------- 面板 ---------- */
+const pbody=$('#pbody'), tabLog=$('#tab-log'), tabStone=$('#tab-stone');
+let current=SCENS[0], runId=0;
+function setTab(which){tabLog.setAttribute('aria-selected',which==='log');tabStone.setAttribute('aria-selected',which==='stone')}
+tabLog.onclick=()=>{setTab('log');renderLog(current,current.steps.length)};
+tabStone.onclick=()=>{selectStone(S.selected||'shushin')};
+
+function whoHTML(k){const st=STONES[k];return `<span class="who" style="--dot:var(${st.color})"><i></i>${st.name}</span>`}
+function stepHTML(s){
+  const [rl,rc]=ROUTE[s.route];
+  return `<li><div class="st-time">${s.t}</div><div>
+    <div class="st-meta">${whoHTML(s.who)}<span>${s.layer}</span><span class="tag ${rc}">${rl}</span></div>
+    ${s.voice?`<div class="voice">${s.voice}</div>`:`<div class="st-text">${s.text}</div>`}
+    ${s.push?`<div class="push"><b>${s.push.t}</b><span>${s.push.b}</span></div>`:''}
+  </div></li>`;
+}
+function renderLog(sc,n){
+  pbody.innerHTML=`<div class="scen-title"><h3>${sc.name}</h3><span>示範情境・${sc.time}</span></div>
+    <ol class="steps">${sc.steps.slice(0,n).map(stepHTML).join('')}</ol>
+    ${n>=sc.steps.length?`<button class="replay" id="replay">重新播放</button>`:''}`;
+  const rp=$('#replay'); if(rp) rp.onclick=()=>runScen(sc.id);
+}
+function resetFx(sc){S.nightT=sc.night?S.nightT:0; if(!sc.night){S.litT=0} S.alert=null; S.cloudT=-1e9; S.signals=[];}
+function runScen(id, instant=false){
+  const sc=SCENS.find(s=>s.id===id); current=sc; const my=++runId;
+  document.querySelectorAll('#scen-chips .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));
+  $('#clock').textContent=sc.time; setTab('log'); S.selected=null;
+  S.nightT=0; S.litT=0; S.alert=null; S.cloudT=-1e9; S.signals=[];
+  if(instant||reduce){
+    sc.steps.forEach(s=>s.fx(A)); renderLog(sc,sc.steps.length); if(reduce) frame(performance.now()); return;
+  }
+  renderLog(sc,0); let i=0;
+  const next=()=>{ if(my!==runId) return; const s=sc.steps[i]; s.fx(A); $('#clock').textContent=s.t.slice(0,5); i++; renderLog(sc,i);
+    if(i<sc.steps.length) setTimeout(next,1500); };
+  setTimeout(next,350);
+}
+function selectStone(k){
+  S.selected=k; const st=STONES[k]; setTab('stone');
+  document.querySelectorAll('#stone-chips .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===k));
+  pbody.innerHTML=`<div class="stone-card">
+    <h3>${st.name}</h3>
+    <div class="sub" style="--dot:var(${st.color})"><i></i>${st.role}・守護${st.room}</div>
+    <p>${st.duty}</p>
+    <dl><dt>${st.main?'硬體':'感測與控制'}</dt><dd><ul>${st.gear.map(g=>`<li>${g}</li>`).join('')}</ul></dd>
+    <dt>相關情境</dt><dd>${st.scen}</dd></dl></div>`;
+  A.pulse(k); if(reduce) frame(performance.now());
+}
+
+$('#scen-chips').innerHTML=SCENS.map(s=>`<button class="chip" data-id="${s.id}" aria-pressed="false">${s.name}<small>${s.time}</small></button>`).join('');
+$('#stone-chips').innerHTML=Object.entries(STONES).map(([k,s])=>`<button class="chip" data-id="${k}" aria-pressed="false" style="--dot:var(${s.color})"><span class="dot"></span>${s.name}<small>${s.room}</small></button>`).join('');
+document.querySelectorAll('#scen-chips .chip').forEach(b=>b.onclick=()=>runScen(b.dataset.id));
+document.querySelectorAll('#stone-chips .chip').forEach(b=>b.onclick=()=>selectStone(b.dataset.id));
+
+/* ---------- 語音示範 ---------- */
+const RULES = [
+  {re:/救命|跌倒|跌了|不舒服|好痛/, route:'alert', via:'主神・通知家屬', reply:'我在。已經打開全屋走道燈，也通知您的家人了，請先待在原地別動。'},
+  {re:/燈/, route:'local', via:'主神 → 小米無線 LED 燈', reply:'好的，燈打開了。', off:'好的，燈關掉了。'},
+  {re:/冷氣|溫度|太熱/, route:'local', via:'主神 → 紅外線遙控器', reply:'冷氣調到 26 度了。', off:'冷氣關掉了。'},
+  {re:/電視/, route:'local', via:'主神 → 紅外線遙控器', reply:'電視打開了。', off:'電視關掉了。'},
+  {re:/藥/, route:'local', via:'主神・生活紀錄', reply:'早上的藥您八點就吃過了，下一次是晚飯後。'},
+  {re:/天氣|下雨|會冷|外套/, route:'cloud', via:'雲端天氣查詢', reply:'明天下午可能會下雨，出門記得帶傘，早晚也比較涼。'},
+  {re:/聊|無聊|悶|孤單|想家|寂寞/, route:'cloud', via:'雲端語言模型', reply:'好呀，我陪您聊。今天中午吃了什麼？我們從這裡聊起。'},
+  {re:/關/, route:'local', via:'主神 → 智慧插座', reply:'好的，已經關掉了。'}
+];
+function respond(text){
+  let r = RULES.find(x=>x.re.test(text));
+  if(r && r.off && /關/.test(text)) r={...r, reply:r.off};
+  if(!r) r={route:'cloud', via:'雲端語言模型', reply:'讓我想一想……這題我請雲端幫忙查，等一下用說的告訴您。'};
+  return r;
+}
+const log=$('#chat-log');
+function addMsg(who,text,meta){
+  const d=document.createElement('div'); d.className='msg '+who;
+  d.innerHTML=`<div class="bubble"></div>${meta?`<div class="route">${meta}</div>`:''}`;
+  d.querySelector('.bubble').textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight;
+}
+function say(text, instant){
+  text=text.trim(); if(!text) return;
+  addMsg('user',text,'<span>客廳・翠葉 收音</span>');
+  const r=respond(text), [rl,rc]=ROUTE[r.route];
+  const go=()=>addMsg('bot',r.reply,`<span class="tag ${rc}">${rl}</span><span>${r.via}</span>`);
+  instant||reduce?go():setTimeout(go,r.route==='cloud'?900:380);
+}
+$('#chat-form').addEventListener('submit',e=>{e.preventDefault(); const i=$('#chat-input'); say(i.value); i.value='';});
+const PHRASES=['幫我開客廳的燈','冷氣調到 26 度','我今天吃藥了沒？','明天會下雨嗎？','有點悶，陪我聊聊','我跌倒了'];
+$('#phrase-chips').innerHTML=PHRASES.map(p=>`<button class="chip" type="button">${p}</button>`).join('');
+document.querySelectorAll('#phrase-chips .chip').forEach(b=>b.onclick=()=>say(b.textContent));
+say('幫我開客廳的燈',true); say('有點悶，陪我聊聊',true);
+
+/* ---------- 啟動 ---------- */
+function boot(){ resize(); runScen('night', true); if(!reduce) requestAnimationFrame(frame); }
+new ResizeObserver(()=>resize()).observe(cv);
+const retheme=()=>{readColors(); drawBase(); if(reduce) frame(performance.now());};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',retheme);
+new MutationObserver(retheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>{if(W)drawBase()});
+boot();
+})();
+</script>
+</body>
+</html>

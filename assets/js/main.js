@@ -23,7 +23,8 @@ const ICONS = {
   draft:'<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7" /><circle cx="9" cy="11" r="0"/>',
   layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
   data:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
-  refresh:'<path d="M20 11a8 8 0 1 0-1.6 5.5"/><path d="M20 5v5h-5"/>'
+  refresh:'<path d="M20 11a8 8 0 1 0-1.6 5.5"/><path d="M20 5v5h-5"/>',
+  shield:'<path d="M12 3l8 3v6c0 4.6-3.4 8.2-8 9-4.6-.8-8-4.4-8-9V6z"/><path d="M9 12l2 2 4-4"/>'
 };
 function svg(name){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[name]||'')+'</svg>';}
 
@@ -58,7 +59,12 @@ const PRODUCTS = [
    tag:'外掛式監測模組', tagEn:'Plug-in Monitoring Module',
    desc:'以設備用電監測為資料入口，協助工廠將機台能耗轉換為產品成本、製程碳排、報價依據、毛利分析與 LCA 基礎資料。',
    descEn:'A power-monitoring data gateway that converts machine energy use into product cost, process carbon, quoting basis, margin analysis and LCA data.',
-   btn:'進入 FlexPro', btnEn:'Enter FlexPro'}
+   btn:'進入 FlexPro', btnEn:'Enter FlexPro'},
+  {icon:'shield', name:'Home Guardian 守家', url:'https://home.designjarvis.com/homeguardian/',
+   tag:'高齡居家守護系統', tagEn:'Elder-care Home Guardian',
+   desc:'為高齡家庭設計的語音式智慧家庭守護系統。客廳的「主神」AI 主機搭配各房間的「式守」感測節點，一句話就能操作；夜間照明、瓦斯警示與家屬通知都主動完成，而且不使用攝影機。',
+   descEn:'A voice-first home guardian for older adults: a local AI hub and room-by-room sensor nodes handle night lighting, gas alerts and family notifications — no cameras, no app to learn.',
+   btn:'進入 守家', btnEn:'Enter Home Guardian'}
 ];
 
 /* ---------------- 案例資料（集中管理 / 未來替換圖片即可） ---------------- */

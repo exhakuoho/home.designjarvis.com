@@ -235,6 +235,7 @@ section{position:relative;z-index:1}
 
 /* 7.3 產品矩陣 product grid */
 .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.prod-card:nth-child(3n+1):last-child{grid-column:1/-1}
 .prod-card{
   display:flex;flex-direction:column;padding:30px 28px 26px;min-height:268px;
   transition:.5s var(--ease);
