@@ -162,30 +162,9 @@ const WORK_CATS = [
   {id:'brand', name:'品牌與文化', nameEn:'Brand & Culture', icon:'building'}
 ];
 const WORKS = [
-  {cat:'home', date:'2026.08', url:'https://smarthome-quote.designjarvis.com/',
-   name:'智慧家庭系統估價單', nameEn:'Smart Home Quotation',
-   desc:'依空間與設備需求整理智慧家庭系統規劃，自動產生分項估價單。', descEn:'Turns room and device needs into an itemised smart-home system quotation.'},
   {cat:'fab', date:'2026.08', url:'https://coil-drawing-assistant.pages.dev/',
    name:'CoilFlow 線圈圖面辨識', nameEn:'CoilFlow Drawing Recognition',
    desc:'手繪線圈圖面辨識與繞線配方確認的互動原型。', descEn:'Interactive prototype for reading hand-drawn coil drawings and confirming winding recipes.'},
-  {cat:'fab', date:'2026.05', url:'https://factoryjarvis-diagram.pages.dev/',
-   name:'Factory JARVIS IoT 架構圖', nameEn:'Factory JARVIS IoT Architecture',
-   desc:'設備聯網、資料閘道到雲端看板的互動系統架構圖。', descEn:'An interactive map from connected machines and data gateways to cloud dashboards.'},
-  {cat:'edu', date:'2026.08', url:'https://weiyan.designjarvis.com/',
-   name:'微研 WEIYAN 品牌官網', nameEn:'WEIYAN Brand Site',
-   desc:'科學、工程、機器人與科技教育的營隊、教材教具品牌平台。', descEn:'Brand platform for science, engineering and robotics camps, kits and courses.'},
-  {cat:'edu', date:'2026.07', url:'https://amrsteam-camp.designjarvis.com/',
-   name:'高科大 STEAM 夏令營｜機器人自走車 × AI', nameEn:'NKUST STEAM Camp: Robot Car × AI',
-   desc:'三日營隊報名頁，機器人自走車與 AI 科技探索。', descEn:'Sign-up site for a three-day robot car and AI exploration camp.'},
-  {cat:'edu', date:'2026.07', url:'https://aisteam-camp2.pages.dev/',
-   name:'AI × STEAM 科技探索營・第二梯', nameEn:'AI × STEAM Camp, Session 2',
-   desc:'AI 程式、氫與電能源探索、自走車小小駕訓班。', descEn:'AI coding, hydrogen and electric energy, and a junior robot-car driving course.'},
-  {cat:'edu', date:'2026.08', url:'https://202608-aisteam3.designjarvis.com/',
-   name:'AI × STEAM 自走車夏令營・第三梯', nameEn:'AI × STEAM Robot Car Camp, Session 3',
-   desc:'高科大推廣教育處 8 月梯次營隊網站。', descEn:'Camp site for the August session with NKUST Continuing Education.'},
-  {cat:'edu', date:'2026.08', url:'https://202608-3dpcamp.designjarvis.com/',
-   name:'2026 3D 列印創客營', nameEn:'2026 3D Printing Maker Camp',
-   desc:'建工校區兩日創客營，從建模到列印完成作品。', descEn:'A two-day maker camp from 3D modelling to printed projects.'},
   {cat:'edu', date:'2026.08', url:'https://robot-scoring.pages.dev/',
    name:'智創機器人奪標攻防競賽計分系統', nameEn:'Robot Challenge Scoring System',
    desc:'競賽現場即時計分與賽程管理。', descEn:'Live on-site scoring and match management for a robot competition.'},
@@ -200,18 +179,12 @@ const WORKS = [
    desc:'以實機 STEP 模型建立的 Three.js 互動儀表板，可探索零件並檢視製程數據。', descEn:'A Three.js dashboard built from the real machine’s STEP model, with part exploration and process data.'},
   {cat:'fab', date:'2026.09', url:'https://micro-injection-showcase.pages.dev/',
    name:'N1a 微型射出機產品展示', nameEn:'N1a Micro Injection Machine',
-   desc:'Three.js 產品展示，呈現射出製程與爆炸圖動畫。', descEn:'A Three.js product showcase with injection-process and exploded-view animations.'},
-  {cat:'brand', date:'2026.07', url:'https://formosa31.pages.dev/',
-   name:'FORMOSA31 唯誠鐘錶', nameEn:'FORMOSA31 Watches',
-   desc:'高雄左營中高階腕錶銷售、維修與保養的形象網站。', descEn:'Brand site for a Kaohsiung watch boutique: sales, repair and servicing.'},
-  {cat:'brand', date:'2026.08', url:'https://tainan-explore.designjarvis.com/',
-   name:'藝饗台南趣', nameEn:'Tainan Explore',
-   desc:'以路線、QR 任務與集點機制，探索府城五種文化記憶。', descEn:'Routes, QR missions and stamps for exploring five cultural memories of Tainan.'}
+   desc:'Three.js 產品展示，呈現射出製程與爆炸圖動畫。', descEn:'A Three.js product showcase with injection-process and exploded-view animations.'}
 ];
 let WORK_CAT = 'all';
 function renderWorks(){
   const bar=$('#workFilter'), grid=$('#workGrid'); if(!bar||!grid) return;
-  bar.innerHTML = WORK_CATS.map(c=>{
+  bar.innerHTML = WORK_CATS.filter(c=>c.id==='all'||WORKS.some(w=>w.cat===c.id)).map(c=>{
     const n = c.id==='all'?WORKS.length:WORKS.filter(w=>w.cat===c.id).length;
     return `<button type="button" class="wf-chip" data-cat="${c.id}" aria-pressed="${WORK_CAT===c.id}">${LANG==='en'?c.nameEn:c.name}<span>${n}</span></button>`;
   }).join('');
