@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20261015">
+<link rel="stylesheet" href="assets/css/style.css?v=20261015b">
 </head>
 <body>
 
@@ -56,6 +56,7 @@
     <a href="#capabilities" data-en="Capabilities">核心能力</a>
     <a href="#products" data-en="Products">產品矩陣</a>
     <a href="#cases" data-en="Case Studies">實際案例</a>
+    <a href="#works" data-en="Works">作品總覽</a>
     <a href="#flow" data-en="Process">整合流程</a>
     <a href="#contact" data-en="Contact">聯絡</a>
   </div>
@@ -150,7 +151,7 @@
     <div class="section-head reveal">
       <span class="eyebrow" data-en="Product & Project Matrix">產品與專案矩陣</span>
       <h2 data-en="One brand matrix, not a single product">一個品牌矩陣，而非單一產品</h2>
-      <p data-en="Six platforms across smart spaces and smart hardware — each a doorway you can step into.">六個橫跨智慧場域與智慧硬體的平台，每一個都是可以直接進入的入口。</p>
+      <p data-en="Seven platforms across smart spaces and smart hardware — each a doorway you can step into.">七個橫跨智慧場域與智慧硬體的平台，每一個都是可以直接進入的入口。</p>
     </div>
     <!-- 由 main.js 依 PRODUCTS 陣列渲染 -->
     <div class="prod-grid" id="prodGrid"></div>
@@ -182,8 +183,22 @@
   </div>
 </section>
 
+<!-- ============ WORKS 作品總覽 ============ -->
+<section class="band band-1" id="works">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-en="Works">作品總覽</span>
+      <h2 data-en="More live sites and systems">更多上線中的網站與系統</h2>
+      <p data-en="Beyond the product matrix: tools, factory prototypes, STEAM camps and brand sites we have designed and shipped. Every card opens the live site.">產品矩陣之外，我們設計並上線的工具、工廠原型、STEAM 營隊與品牌網站。每一張卡片都能直接開啟線上版本。</p>
+    </div>
+    <div class="work-filter" id="workFilter" role="group" aria-label="作品分類"></div>
+    <!-- 由 main.js 依 WORKS 陣列渲染 -->
+    <div class="work-grid" id="workGrid"></div>
+  </div>
+</section>
+
 <!-- ============ FLOW 系統整合流程 ============ -->
-<section class="band band-1" id="flow">
+<section class="band" id="flow">
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow" data-en="Integration Process">系統整合流程</span>
@@ -314,6 +329,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261015"></script>
+<script src="assets/js/main.js?v=20261015b"></script>
 </body>
 </html>
