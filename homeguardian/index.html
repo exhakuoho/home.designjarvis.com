@@ -61,13 +61,14 @@ p{margin:0}
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--sand) 88%,transparent);
   backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
 header.top .wrap{display:flex;align-items:center;gap:20px;height:56px}
-.seal{width:30px;height:30px;border:1.5px solid var(--bengara);color:var(--bengara);display:grid;place-items:center;
-  font-family:var(--f-display);font-weight:900;font-size:17px;border-radius:3px;transform:rotate(-3deg);flex:none}
+.ico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.mark{width:30px;height:30px;color:var(--bengara);stroke-width:1.3}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-size:18px;letter-spacing:.1em}
-nav.sections{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
-nav.sections a{font-family:var(--f-ui);font-size:13px;text-decoration:none;color:var(--ink-2);padding:6px 10px;border-radius:2px;white-space:nowrap}
+nav.sections{margin-left:auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0}
+nav.sections a{font-family:var(--f-ui);font-size:13px;text-decoration:none;color:var(--ink-2);padding:6px 9px;border-radius:2px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+nav.sections a .ico{width:17px;height:17px;color:var(--ink)}
+nav.sections a.cta{border:1px solid var(--line)}
 nav.sections a:hover{color:var(--ink);background:var(--sand-2)}
-nav.sections a b{font-family:var(--f-display);font-weight:700;color:var(--ink);margin-right:4px}
 
 /* 序 */
 .hero{padding-block:56px 28px;display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,5vw,72px);align-items:start}
@@ -167,7 +168,8 @@ ol.steps li:first-child{border-top:0}
 
 /* 層 */
 .stack{display:grid;gap:10px}
-.layer{display:grid;grid-template-columns:minmax(0,var(--w)) 1fr;gap:24px;align-items:center}
+.layer{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:center}
+.layer .rock{width:var(--w)}
 .rock{background:var(--rc);color:var(--sand);padding:14px 22px;font-family:var(--f-display);font-weight:700;font-size:17px;letter-spacing:.12em;
   border-radius:var(--rr);min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .rock small{font-family:var(--f-ui);font-weight:400;font-size:11px;letter-spacing:.14em;opacity:.8}
@@ -184,7 +186,7 @@ td.muted{color:var(--ink-2)}
 .innov{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
 .innov > div{padding:22px 22px 24px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
 .innov > div:not(:nth-child(3n+1)){padding-left:22px;border-left:1px solid var(--line)}
-.innov .k{font-family:var(--f-display);font-weight:900;font-size:34px;line-height:1;color:var(--ink-2)}
+.innov .k{width:34px;height:34px;color:var(--ink-2);stroke-width:1.2;margin-top:2px}
 .innov h3{font-size:16.5px;margin-bottom:6px}
 .innov p{font-size:14.5px;color:var(--ink-2);line-height:1.7}
 .compare{margin-top:40px;overflow-x:auto}
@@ -210,6 +212,31 @@ ol.path{padding:0;margin:0 0 40px}
 .team span{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2)}
 footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
+/* 形・圖片 */
+.gallery{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:22px;align-items:start}
+.g-main{grid-column:span 7}.g-side{grid-column:span 5;display:grid;gap:22px}
+figure{margin:0;min-width:0}
+figure button.zoom{display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:2px;background:var(--sand-2);cursor:zoom-in;overflow:hidden}
+figure img{display:block;width:100%;height:auto;transition:transform .6s ease}
+figure button.zoom:hover img{transform:scale(1.02)}
+figcaption{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2);line-height:1.6;margin-top:8px}
+figcaption b{color:var(--ink);font-weight:500}
+.roster{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.roster div{padding:12px 12px 12px 0;display:grid;gap:2px}
+.roster div+div{padding-left:12px;border-left:1px solid var(--line)}
+.roster b{font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:.12em;display:flex;align-items:center;gap:8px}
+.roster b i{width:9px;height:9px;border-radius:50%;background:var(--dot)}
+.roster span{font-family:var(--f-ui);font-size:12px;color:var(--ink-2)}
+.core{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:28px;align-items:center;margin-top:34px;padding-top:28px;border-top:1px dashed var(--line)}
+.core h3{font-size:18px;letter-spacing:.06em;margin-bottom:8px}
+.core p{font-size:15px;color:var(--ink-2)}
+.plan-fig{margin-top:30px}
+dialog#lb{border:0;padding:0;background:transparent;max-width:min(1200px,94vw);max-height:92vh}
+dialog#lb::backdrop{background:rgba(10,10,8,.82)}
+dialog#lb img{display:block;max-width:100%;max-height:84vh;width:auto;margin:0 auto}
+dialog#lb p{color:#e6e2d6;font-family:var(--f-ui);font-size:13px;text-align:center;margin-top:10px}
+dialog#lb button{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:2px;padding:4px 10px;cursor:pointer;font-family:var(--f-ui)}
+@media (max-width:560px){.roster{grid-template-columns:repeat(2,minmax(0,1fr))}.roster div{border-left:0 !important;padding-left:0 !important}}
 @keyframes settle{from{opacity:.25;transform:translateY(4px)}to{opacity:1;transform:none}}
 
 @media (max-width:900px){
@@ -223,7 +250,10 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
   .path li::before{top:4px;left:-6px}
   .horizon{grid-template-columns:1fr}
   .layer{grid-template-columns:1fr;gap:6px}
-  .rock{max-width:var(--w)}
+  .layer .rock{width:auto;max-width:var(--w)}
+  .gallery{grid-template-columns:1fr}
+  .gallery .g-main,.gallery .g-side{grid-column:auto}
+  .core{grid-template-columns:1fr}
 }
 @media (max-width:560px){
   .hero{grid-template-columns:1fr;padding-block:32px 16px}
@@ -234,7 +264,7 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
   .facts div+div{padding-left:0;border-left:0}
   .facts div{flex-basis:100%;border-bottom:1px solid var(--line)}
   .facts div:last-child{border-bottom:0}
-  .rock{max-width:100%}
+  .layer .rock{max-width:100%}
   nav.sections a{padding:6px 7px}
   nav.sections a span{display:none}
 }
@@ -242,17 +272,34 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M6 9.5V20h12V9.5"/><ellipse cx="12" cy="15.6" rx="1.5" ry="1"/><path d="M8.7 15.6a3.3 2.3 0 0 1 6.6 0"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><path d="M6.6 10.2 7 5.4l3 2.3h4l3-2.3.4 4.8"/><path d="M5.6 13.6a6.4 6.4 0 0 0 12.8 0c0-1.9-1-3.4-1-3.4H6.6s-1 1.5-1 3.4z"/><path d="M10 13.4v.4M14 13.4v.4"/></symbol>
+  <symbol id="i-garden" viewBox="0 0 24 24"><ellipse cx="8.5" cy="14.5" rx="2.4" ry="1.6"/><path d="M4.3 14.5a4.2 3.2 0 0 1 8.4 0M2.4 14.5a6.1 4.7 0 0 1 12.2 0"/><path d="M15.5 9.5h6M15.5 12.5h6M17 15.5h4.5M2.5 19.5h19"/></symbol>
+  <symbol id="i-voice" viewBox="0 0 24 24"><path d="M12 4v16M8.5 7.5v9M15.5 7.5v9M5 10.5v3M19 10.5v3"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 4 3.5 8.3 12 12.6l8.5-4.3z"/><path d="m3.5 12.4 8.5 4.3 8.5-4.3"/><path d="m3.5 16.3 8.5 4.3 8.5-4.3"/></symbol>
+  <symbol id="i-new" viewBox="0 0 24 24"><path d="M12 3v3.5M12 17.5V21M3 12h3.5M17.5 12H21"/><path d="m12 8.6 1.2 2.2 2.2 1.2-2.2 1.2-1.2 2.2-1.2-2.2L8.6 12l2.2-1.2z"/></symbol>
+  <symbol id="i-path" viewBox="0 0 24 24"><ellipse cx="6" cy="18.2" rx="2.6" ry="1.4"/><ellipse cx="12" cy="12.6" rx="2.6" ry="1.4"/><ellipse cx="18" cy="7" rx="2.6" ry="1.4"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8.2" r="3"/><path d="M3.5 19.5a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9.2" r="2.3"/><path d="M15.6 14.3a4.4 4.4 0 0 1 5.4 4.3"/></symbol>
+  <symbol id="i-console" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8.5 20h7M12 16v4"/><path d="m7 12.5 3-3 2 2 4.5-4.5"/></symbol>
+  <symbol id="i-speech" viewBox="0 0 24 24"><path d="M4 5h16v11h-9.5L6 19.5V16H4z"/><path d="M8 9.5h8M8 12.5h5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 19 6v5.6c0 4.2-3 7.7-7 9-4-1.3-7-4.8-7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-hybrid" viewBox="0 0 24 24"><path d="M7 17.5a4 4 0 0 1-.6-7.9A5.5 5.5 0 0 1 17 8.4a3.8 3.8 0 0 1 1.2 7.3"/><rect x="9.5" y="13" width="5" height="5" rx=".8"/><path d="M12 11v2M12 18v2"/></symbol>
+  <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/><circle cx="12" cy="12" r="2.4"/><path d="M4.5 19.5 19.5 4.5"/></symbol>
+  <symbol id="i-modules" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><path d="M17 14v6M14 17h6"/></symbol>
+</svg>
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#top"><span class="seal" aria-hidden="true">守</span>守家</a>
+    <a class="brand" href="#top"><svg class="ico mark" aria-hidden="true"><use href="#i-mark"/></svg>守家</a>
     <nav class="sections" aria-label="章節">
-      <a href="#garden-sec"><b>庭</b><span>情境</span></a>
-      <a href="#voice-sec"><b>聲</b><span>語音</span></a>
-      <a href="#layer-sec"><b>層</b><span>架構</span></a>
-      <a href="#new-sec"><b>新</b><span>創新</span></a>
-      <a href="#path-sec"><b>道</b><span>進程</span></a>
-      <a href="#team-sec"><b>人</b><span>團隊</span></a>
-      <a href="console.html" style="border:1px solid var(--line)"><b>台</b><span>後台 ↗</span></a>
+      <a href="#form-sec"><svg class="ico" aria-hidden="true"><use href="#i-form"/></svg><span>主神式守</span></a>
+      <a href="#garden-sec"><svg class="ico" aria-hidden="true"><use href="#i-garden"/></svg><span>情境</span></a>
+      <a href="#voice-sec"><svg class="ico" aria-hidden="true"><use href="#i-voice"/></svg><span>語音</span></a>
+      <a href="#layer-sec"><svg class="ico" aria-hidden="true"><use href="#i-layers"/></svg><span>架構</span></a>
+      <a href="#new-sec"><svg class="ico" aria-hidden="true"><use href="#i-new"/></svg><span>創新</span></a>
+      <a href="#path-sec"><svg class="ico" aria-hidden="true"><use href="#i-path"/></svg><span>進程</span></a>
+      <a href="#team-sec"><svg class="ico" aria-hidden="true"><use href="#i-people"/></svg><span>團隊</span></a>
+      <a class="cta" href="console.html" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-console"/></svg><span>後台</span></a>
     </nav>
   </div>
 </header>
@@ -269,6 +316,31 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
         <div><dt>架構</dt><dd>主神 × 五式守</dd></div>
         <div><dt>隱私</dt><dd>不裝攝影機，資料留在家中</dd></div>
       </dl>
+    </div>
+  </section>
+
+  <!-- 形 -->
+  <section class="block" id="form-sec">
+    <div class="shead">
+      <div class="glyph" aria-hidden="true">形</div>
+      <div>
+        <h2>主神與五位式守</h2>
+        <p>主神放在客廳，頂部是一座可以耙砂的小枯山水；五位式守各守一個房間，造型取材自守護神與式神，外殼以 3D 列印製作。點圖片可放大。</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="g-main"><figure><button class="zoom" type="button" data-cap="<b>主神 × 式守</b>　右為主神中央主機，左起赤火、蒼月、翠葉、白日、紫星。"><img src="homeguardian-img/shushin-shikimori.jpg" width="1600" height="1516" alt="主神中央主機與赤火、蒼月、翠葉、白日、紫星五位式守" loading="lazy"></button><figcaption><b>主神 × 式守</b>　右為主神中央主機，左起赤火、蒼月、翠葉、白日、紫星。</figcaption></figure></div>
+      <div class="g-side">
+        <figure><button class="zoom" type="button" data-cap="<b>主神外觀</b>　頂部枯山水砂盤、正面散熱格柵，剖面可見風扇與主機板。"><img src="homeguardian-img/host-views.jpg" width="1064" height="1008" alt="主神外觀俯視、立體、正面與剖面" loading="lazy"></button><figcaption><b>主神外觀</b>　頂部枯山水砂盤、正面散熱格柵，剖面可見風扇與主機板。</figcaption></figure>
+        <figure><button class="zoom" type="button" data-cap="<b>赤火守護者三視圖</b>　貓耳兜帽與火焰紋章，守護廚房的爐火。"><img src="homeguardian-img/sekka-3view.jpg" width="1064" height="1008" alt="赤火守護者正視、側視、頂視三視圖" loading="lazy"></button><figcaption><b>赤火守護者三視圖</b>　貓耳兜帽與火焰紋章，守護廚房的爐火。</figcaption></figure>
+      </div>
+    </div>
+    <div class="roster" style="margin-top:28px">
+      <div style="--dot:var(--c-fire)"><b><i></i>赤火</b><span>廚房・煙霧與瓦斯</span></div>
+      <div style="--dot:var(--c-moon)"><b><i></i>蒼月</b><span>臥室・夜間起床</span></div>
+      <div style="--dot:var(--c-leaf)"><b><i></i>翠葉</b><span>客廳・起居與陪伴</span></div>
+      <div style="--dot:var(--c-sun)"><b><i></i>白日</b><span>玄關・天氣與門窗</span></div>
+      <div style="--dot:var(--c-star)"><b><i></i>紫星</b><span>走廊浴室・夜路照明</span></div>
     </div>
   </section>
 
@@ -298,6 +370,7 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
         <div class="pbody" id="pbody" role="tabpanel"></div>
       </div>
     </div>
+    <div class="plan-fig"><figure><button class="zoom" type="button" data-cap="<b>居家部署規劃圖</b>　主神位於客廳中央，式守分布在客廳、廚房、臥室、走廊與浴室，形成分散式感測網路；右側為邊緣 AI 與雲端語言模型的混合架構。"><img src="homeguardian-img/floorplan.jpg" width="1408" height="768" alt="守家居家部署規劃圖" loading="lazy"></button><figcaption><b>居家部署規劃圖</b>　主神位於客廳中央，式守分布在客廳、廚房、臥室、走廊與浴室，形成分散式感測網路；右側為邊緣 AI 與雲端語言模型的混合架構。</figcaption></figure></div>
   </section>
 
   <!-- 聲 -->
@@ -364,6 +437,10 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
       <div class="layer" style="--w:100%"><div class="rock" style="--rc:var(--c-fire);--rr:12% 88% 20% 80% / 50% 50% 50% 50%">感測層・式守<small>ZIGBEE</small></div>
         <p><b>Aqara Zigbee Hub，加上人體、門窗、溫濕度、毫米波雷達、空氣品質、煙霧、瓦斯感測器。</b>電池供電、免布線，舊房子也能直接裝。</p></div>
     </div>
+    <div class="core">
+      <figure><button class="zoom" type="button" data-cap="<b>主神剖面</b>　由上而下：枯山水砂盤、散熱風扇、主機板。"><img src="homeguardian-img/host-cutaway.jpg" width="440" height="280" alt="主神剖面示意" loading="lazy"></button><figcaption><b>主神剖面</b>　由上而下：枯山水砂盤、散熱風扇、主機板。</figcaption></figure>
+      <div><h3>石組的核心：主神</h3><p>中央運算層就裝在這顆「主石」裡。Jetson Orin Nano SUPER 在本地完成語音辨識、意圖判斷與情境規則；頂部的砂盤讓主機放在客廳時像一件擺設，而不是一台機器。</p></div>
+    </div>
   </section>
 
   <!-- 新 -->
@@ -376,12 +453,12 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
       </div>
     </div>
     <div class="innov">
-      <div><span class="k">形</span><div><h3>角色化的主神與式守</h3><p>每位式守有自己的造型與守護的房間，冷冰冰的設備變成看得懂、叫得出名字的家中成員。</p></div></div>
-      <div><span class="k">言</span><div><h3>一句話完成操作</h3><p>不必學 App、不必記選單，用平常說話的方式就能控制、查詢與接收提醒。</p></div></div>
-      <div><span class="k">先</span><div><h3>主動守護</h3><p>不等指令。夜間起床自動照明、久未活動主動關心、瓦斯異常立即警示。</p></div></div>
-      <div><span class="k">混</span><div><h3>邊緣與雲端混合</h3><p>本地處理確保即時與隱私；雲端模型提供自然對話與陪伴。</p></div></div>
-      <div><span class="k">隱</span><div><h3>不用攝影機</h3><p>以毫米波雷達、人體與門窗感測取代影像監看，守護長輩也保有尊嚴。</p></div></div>
-      <div><span class="k">增</span><div><h3>式守可增可減</h3><p>依房屋格局增減式守，擴充環境、電力、空氣品質感測，部署成本低。</p></div></div>
+      <div><svg class="ico k" aria-hidden="true"><use href="#i-form"/></svg><div><h3>角色化的主神與式守</h3><p>每位式守有自己的造型與守護的房間，冷冰冰的設備變成看得懂、叫得出名字的家中成員。</p></div></div>
+      <div><svg class="ico k" aria-hidden="true"><use href="#i-speech"/></svg><div><h3>一句話完成操作</h3><p>不必學 App、不必記選單，用平常說話的方式就能控制、查詢與接收提醒。</p></div></div>
+      <div><svg class="ico k" aria-hidden="true"><use href="#i-shield"/></svg><div><h3>主動守護</h3><p>不等指令。夜間起床自動照明、久未活動主動關心、瓦斯異常立即警示。</p></div></div>
+      <div><svg class="ico k" aria-hidden="true"><use href="#i-hybrid"/></svg><div><h3>邊緣與雲端混合</h3><p>本地處理確保即時與隱私；雲端模型提供自然對話與陪伴。</p></div></div>
+      <div><svg class="ico k" aria-hidden="true"><use href="#i-eyeoff"/></svg><div><h3>不用攝影機</h3><p>以毫米波雷達、人體與門窗感測取代影像監看，守護長輩也保有尊嚴。</p></div></div>
+      <div><svg class="ico k" aria-hidden="true"><use href="#i-modules"/></svg><div><h3>式守可增可減</h3><p>依房屋格局增減式守，擴充環境、電力、空氣品質感測，部署成本低。</p></div></div>
     </div>
     <div class="compare">
       <table>
@@ -446,6 +523,7 @@ footer{padding-block:40px 56px;border-top:1px solid var(--line);font-family:var(
   </footer>
 </div>
 
+<dialog id="lb" aria-label="圖片放大"><button type="button" id="lb-close">關閉</button><img id="lb-img" alt=""><p id="lb-cap"></p></dialog>
 <script>
 (() => {
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -766,6 +844,11 @@ const PHRASES=['幫我開客廳的燈','冷氣調到 26 度','我今天吃藥了
 $('#phrase-chips').innerHTML=PHRASES.map(p=>`<button class="chip" type="button">${p}</button>`).join('');
 document.querySelectorAll('#phrase-chips .chip').forEach(b=>b.onclick=()=>say(b.textContent));
 say('幫我開客廳的燈',true); say('有點悶，陪我聊聊',true);
+
+/* ---------- 圖片放大 ---------- */
+const lb=$('#lb');
+document.querySelectorAll('button.zoom').forEach(b=>b.addEventListener('click',()=>{const im=b.querySelector('img');$('#lb-img').src=im.src;$('#lb-img').alt=im.alt;$('#lb-cap').innerHTML=b.dataset.cap;try{lb.showModal()}catch(e){lb.setAttribute('open','')}}));
+$('#lb-close').onclick=()=>lb.close(); lb.addEventListener('click',e=>{if(e.target===lb)lb.close()});
 
 /* ---------- 啟動 ---------- */
 function boot(){ resize(); runScen('night', true); if(!reduce) requestAnimationFrame(frame); }

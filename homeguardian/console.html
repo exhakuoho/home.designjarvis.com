@@ -52,14 +52,15 @@ p{margin:0}
 .app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
 aside.side{background:var(--sand-2);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
 .brand{display:flex;align-items:center;gap:10px;padding:0 8px}
-.seal{width:30px;height:30px;border:1.5px solid var(--bengara);color:var(--bengara);display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:17px;border-radius:3px;transform:rotate(-3deg);flex:none}
+.ico{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.mark{width:30px;height:30px;color:var(--bengara);stroke-width:1.3}
 .brand b{font-family:var(--f-display);font-size:18px;letter-spacing:.12em;font-weight:900}
 .brand small{display:block;font-size:11px;color:var(--ink-2);letter-spacing:.12em}
 .home{padding:10px 10px;border:1px solid var(--line);border-radius:3px;font-size:13px;display:grid;gap:2px}
 .home b{font-weight:500}
 nav.nav{display:grid;gap:2px}
 nav.nav button{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:8px;background:none;border:0;padding:8px 10px;border-radius:3px;cursor:pointer;text-align:left;color:var(--ink-2)}
-nav.nav button .g{font-family:var(--f-display);font-weight:900;font-size:18px;color:var(--ink-3);text-align:center}
+nav.nav button .g{color:var(--ink-3);justify-self:center}
 nav.nav button:hover{background:var(--card);color:var(--ink)}
 nav.nav button[aria-current="page"]{background:var(--ink);color:var(--sand)}
 nav.nav button[aria-current="page"] .g{color:var(--sand)}
@@ -250,11 +251,23 @@ details.tv summary{cursor:pointer;color:var(--ink-2)}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
-</head>
-<body>
+
 <div class="app">
   <aside class="side">
-    <div class="brand"><span class="seal" aria-hidden="true">守</span><div><b>守家</b><small>控制台</small></div></div>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M6 9.5V20h12V9.5"/><ellipse cx="12" cy="15.6" rx="1.5" ry="1"/><path d="M8.7 15.6a3.3 2.3 0 0 1 6.6 0"/></symbol>
+  <symbol id="i-overview" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="8" rx="1"/><rect x="13.5" y="3.5" width="7" height="5" rx="1"/><rect x="13.5" y="11.5" width="7" height="9" rx="1"/><rect x="3.5" y="14.5" width="7" height="6" rx="1"/></symbol>
+  <symbol id="i-devices" viewBox="0 0 24 24"><rect x="4.5" y="3.5" width="15" height="17" rx="3"/><path d="M9.5 9v2.5M14.5 9v2.5"/><path d="M10 16h4"/></symbol>
+  <symbol id="i-events" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 1.5H5z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></symbol>
+  <symbol id="i-reminders" viewBox="0 0 24 24"><circle cx="12" cy="12.5" r="7.5"/><path d="M12 8.5v4l2.6 1.8"/><path d="M5 4.5 3 6.5M19 4.5l2 2"/></symbol>
+  <symbol id="i-rules" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="12" r="2.2"/><path d="M6 8.2v7.6M8 6.8c4 .7 5.5 2.4 7.9 4.4M8 17.2c4-.7 5.5-2.4 7.9-4.4"/></symbol>
+  <symbol id="i-logs" viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M7 16.5V12M11 16.5V7.5M15 16.5v-6M19 16.5V5"/></symbol>
+  <symbol id="i-family" viewBox="0 0 24 24"><circle cx="9" cy="8.2" r="3"/><path d="M3.5 19.5a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9.2" r="2.3"/><path d="M15.6 14.3a4.4 4.4 0 0 1 5.4 4.3"/></symbol>
+  <symbol id="i-system" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/><rect x="9.5" y="9.5" width="5" height="5" rx=".6"/><path d="M9.5 6.5V3.5M14.5 6.5V3.5M9.5 20.5v-3M14.5 20.5v-3M6.5 9.5h-3M6.5 14.5h-3M20.5 9.5h-3M20.5 14.5h-3"/></symbol>
+</svg>
+    <div class="brand"><svg class="ico mark" aria-hidden="true"><use href="#i-mark"/></svg><div><b>守家</b><small>控制台</small></div></div>
     <div class="home"><b id="home-name">示範家庭・阿嬤的家</b><span class="muted">主神 × 5 式守・29 台設備</span></div>
     <nav class="nav" id="nav" aria-label="功能"></nav>
     <div class="side-foot">
@@ -500,13 +513,13 @@ function resolveSide(ev){
 const pending=()=>S.events.filter(e=>e.status==='pending');
 
 /* ================= 導覽 ================= */
-const VIEWS=[['overview','總','總覽'],['devices','器','設備'],['events','事','事件'],['reminders','時','提醒'],['rules','規','規則'],['logs','錄','紀錄'],['family','家','家屬'],['system','系','系統']];
+const VIEWS=[['overview','overview','總覽'],['devices','devices','設備'],['events','events','事件'],['reminders','reminders','提醒'],['rules','rules','規則'],['logs','logs','紀錄'],['family','family','家屬'],['system','system','系統']];
 let cur='overview';
 try{const h=location.hash.slice(1); if(VIEWS.some(v=>v[0]===h)) cur=h;}catch(e){}
 const ui={evFilter:{sev:'all',status:'all',room:'all'},evOpen:null,devRoom:'all',devKind:'all',menu:false,addRem:false,addRule:false,addContact:false};
 function renderNav(){
   const n=pending().length;
-  $('#nav').innerHTML=VIEWS.map(([id,g,l])=>`<button data-act="go" data-v="${id}" ${cur===id?'aria-current="page"':''}><span class="g">${g}</span><span class="l">${l}</span>${id==='events'&&n?`<span class="badge">${n}</span>`:'<span></span>'}</button>`).join('');
+  $('#nav').innerHTML=VIEWS.map(([id,g,l])=>`<button data-act="go" data-v="${id}" ${cur===id?'aria-current="page"':''}><svg class="ico g" aria-hidden="true"><use href="#i-${g}"/></svg><span class="l">${l}</span>${id==='events'&&n?`<span class="badge">${n}</span>`:'<span></span>'}</button>`).join('');
   $('#foot-dot').className='dot'+(pending().some(e=>e.sev==='crit')?' crit':'');
 }
 function topbar(){

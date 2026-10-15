@@ -30,6 +30,11 @@ function svg(name){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[
 
 /* ---------------- 產品資料（集中管理） ---------------- */
 const PRODUCTS = [
+  {icon:'shield', featured:true, img:'assets/images/home-guardian.jpg', name:'Home Guardian 守家', url:'https://home.designjarvis.com/homeguardian/',
+   tag:'高齡居家守護系統', tagEn:'Elder-care Home Guardian',
+   desc:'為高齡家庭設計的語音式智慧家庭守護系統。客廳的「主神」AI 主機搭配各房間的「式守」感測節點，一句話就能操作；夜間照明、瓦斯警示與家屬通知都主動完成，而且不使用攝影機。',
+   descEn:'A voice-first home guardian for older adults: a local AI hub and room-by-room sensor nodes handle night lighting, gas alerts and family notifications — no cameras, no app to learn.',
+   btn:'進入 守家', btnEn:'Enter Home Guardian'},
   {icon:'lamp', name:'Swirl Lamp', url:'https://swirl-lamp.designjarvis.com/',
    tag:'智慧藝術燈', tagEn:'Smart Art Lamp',
    desc:'一盞為你而亮的智慧藝術燈，結合高質感造型、情境燈光、漸進式色彩切換與智慧家居控制，讓照明成為空間情緒的一部分。',
@@ -59,16 +64,17 @@ const PRODUCTS = [
    tag:'外掛式監測模組', tagEn:'Plug-in Monitoring Module',
    desc:'以設備用電監測為資料入口，協助工廠將機台能耗轉換為產品成本、製程碳排、報價依據、毛利分析與 LCA 基礎資料。',
    descEn:'A power-monitoring data gateway that converts machine energy use into product cost, process carbon, quoting basis, margin analysis and LCA data.',
-   btn:'進入 FlexPro', btnEn:'Enter FlexPro'},
-  {icon:'shield', name:'Home Guardian 守家', url:'https://home.designjarvis.com/homeguardian/',
-   tag:'高齡居家守護系統', tagEn:'Elder-care Home Guardian',
-   desc:'為高齡家庭設計的語音式智慧家庭守護系統。客廳的「主神」AI 主機搭配各房間的「式守」感測節點，一句話就能操作；夜間照明、瓦斯警示與家屬通知都主動完成，而且不使用攝影機。',
-   descEn:'A voice-first home guardian for older adults: a local AI hub and room-by-room sensor nodes handle night lighting, gas alerts and family notifications — no cameras, no app to learn.',
-   btn:'進入 守家', btnEn:'Enter Home Guardian'}
+   btn:'進入 FlexPro', btnEn:'Enter FlexPro'}
+
 ];
 
 /* ---------------- 案例資料（集中管理 / 未來替換圖片即可） ---------------- */
 const CASES = [
+  {img:'assets/images/case-home-guardian.jpg', prod:'Home Guardian 守家',
+   type:'智慧照護', typeEn:'Smart Care',
+   name:'高齡住宅居家守護部署', nameEn:'Elder-care Home Deployment',
+   desc:'主神 AI 主機置於客廳，五位式守分守廚房、臥室、玄關與走廊，夜間照明、瓦斯警示與家屬通知全部在家中判斷。',
+   descEn:'A local AI hub in the living room and five room nodes covering kitchen, bedroom, entrance and hallway \u2014 night lighting, gas alerts and family notifications decided at home.'},
   {img:'assets/images/case-smart-home.jpg', prod:'Smart Home',
    type:'智慧場域', typeEn:'Smart Space',
    name:'智慧住宅情境控制', nameEn:'Smart Residential Scene Control',
@@ -114,7 +120,7 @@ let LANG = localStorage.getItem('dj-lang') || 'zh';
 function renderProducts(){
   const grid=$('#prodGrid'); if(!grid) return;
   grid.innerHTML = PRODUCTS.map(p=>`
-    <a class="prod-card glass reveal" href="${p.url}" target="_blank" rel="noopener"
+    <a class="prod-card glass reveal${p.featured?' is-featured':''}" href="${p.url}" target="_blank" rel="noopener"
        aria-label="${LANG==='en'?p.btnEn:p.btn}">
       <div class="pc-top">
         <div class="prod-icon">${svg(p.icon)}</div>
@@ -123,6 +129,7 @@ function renderProducts(){
       <h3>${p.name}</h3>
       <p class="pc-desc">${LANG==='en'?p.descEn:p.desc}</p>
       <span class="btn-text">${LANG==='en'?p.btnEn:p.btn} <span class="arr">→</span></span>
+      ${p.img?`<img class="pc-img" src="${p.img}" alt="${p.name}" loading="lazy">`:''}
     </a>`).join('');
 }
 
