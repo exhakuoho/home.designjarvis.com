@@ -162,6 +162,9 @@ const WORK_CATS = [
   {id:'brand', name:'品牌與文化', nameEn:'Brand & Culture', icon:'building'}
 ];
 const WORKS = [
+  {cat:'edu', date:'2026.10', url:'https://classjarvis-preview.pages.dev/',
+   name:'CLASSJARVIS 教室管理', nameEn:'CLASSJARVIS Classroom Management',
+   desc:'教室排課、刷卡扣堂與老師評分的前端預覽，使用純假資料展示。', descEn:'Frontend preview of class scheduling, card check-in deductions and teacher grading, using demo data only.'},
   {cat:'fab', date:'2026.08', url:'https://coil-drawing-assistant.pages.dev/',
    name:'CoilFlow 線圈圖面辨識', nameEn:'CoilFlow Drawing Recognition',
    desc:'手繪線圈圖面辨識與繞線配方確認的互動原型。', descEn:'Interactive prototype for reading hand-drawn coil drawings and confirming winding recipes.'},
